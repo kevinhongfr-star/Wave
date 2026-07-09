@@ -1,0 +1,1058 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WAVE — Marketing Operations Platform</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+:root {
+  --primary: #0F1115;
+  --primary-light: #1a1d24;
+  --secondary: #F5F5F5;
+  --accent: #C108AB;
+  --accent-hover: #a00690;
+  --accent-light: rgba(193,8,171,0.08);
+  --gold: #C108AB;
+  --gold-light: rgba(193,8,171,0.15);
+  --surface: #F5F5F5;
+  --card: #ffffff;
+  --border: #e8e8e8;
+  --text: #0F1115;
+  --text-secondary: #6b7280;
+  --success: #10b981;
+  --warning: #f59e0b;
+  --danger: #ef4444;
+  --info: #3b82f6;
+  --purple: #8b5cf6;
+  --teal: #14b8a6;
+  --radius: 10px;
+  --shadow: 0 1px 3px rgba(0,0,0,0.06);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+  --shadow-lg: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Inter',system-ui,sans-serif; background:var(--surface); color:var(--text); line-height:1.5; }
+h1,h2,h3,h4,h5,h6,.page-title,.sidebar-brand h1,.kpi-value { font-family:'Crimson Pro',Georgia,serif; }
+
+/* ═══ LAYOUT ═══ */
+.app { display:flex; min-height:100vh; }
+
+/* ═══ SIDEBAR ═══ */
+.sidebar { width:240px; background:var(--primary); color:#fff; position:fixed; top:0; bottom:0; left:0; display:flex; flex-direction:column; z-index:100; overflow-y:auto; }
+.sidebar-brand { padding:24px 20px 16px; border-bottom:1px solid rgba(255,255,255,0.06); }
+.sidebar-brand h1 { font-size:24px; font-weight:900; letter-spacing:6px; color:#ffffff; }
+.sidebar-brand p { font-size:10px; color:var(--accent); letter-spacing:1.5px; text-transform:uppercase; margin-top:2px; opacity:0.8; }
+.sidebar-nav { flex:1; padding:12px 10px; }
+.nav-group { margin-bottom:20px; }
+.nav-group-label { font-size:9px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:rgba(255,255,255,0.3); padding:0 10px; margin-bottom:6px; }
+.nav-item { display:flex; align-items:center; gap:10px; padding:8px 10px; border-radius:6px; cursor:pointer; font-size:13px; font-weight:500; color:rgba(255,255,255,0.6); transition:all 0.15s; }
+.nav-item:hover { background:rgba(255,255,255,0.06); color:rgba(255,255,255,0.9); }
+.nav-item.active { background:rgba(193,8,171,0.15); color:#fff; font-weight:600; border-left:2px solid var(--accent); }
+.nav-item .ni-icon { width:18px; text-align:center; font-size:14px; }
+.nav-item .ni-badge { margin-left:auto; background:rgba(255,255,255,0.15); color:#fff; font-size:10px; font-weight:700; padding:1px 6px; border-radius:8px; }
+.sidebar-user { padding:14px 16px; border-top:1px solid rgba(255,255,255,0.06); display:flex; align-items:center; gap:10px; }
+.sidebar-user .avatar { width:30px; height:30px; border-radius:50%; background:var(--accent); display:flex; align-items:center; justify-content:center; font-weight:800; font-size:11px; color:#fff; }
+.sidebar-user .uname { font-size:12px; font-weight:600; }
+.sidebar-user .urole { font-size:10px; color:rgba(255,255,255,0.4); }
+
+/* ═══ TOPBAR ═══ */
+.main { margin-left:240px; flex:1; }
+.topbar { height:44px; background:var(--primary-light); display:flex; align-items:center; padding:0 20px; gap:24px; border-bottom:1px solid rgba(255,255,255,0.05); position:sticky; top:0; z-index:90; }
+.topbar-stack { display:flex; align-items:center; gap:6px; font-size:11px; font-weight:600; letter-spacing:0.8px; text-transform:uppercase; color:rgba(255,255,255,0.4); }
+.topbar-stack.active { color:#fff; }
+.topbar-dot { width:7px; height:7px; border-radius:50%; background:rgba(255,255,255,0.2); }
+.topbar-stack.active .topbar-dot { background:var(--accent); }
+.topbar-right { margin-left:auto; font-size:10px; color:rgba(255,255,255,0.3); }
+
+/* ═══ CONTENT ═══ */
+.content { padding:24px; }
+.page { display:none; }
+.page.active { display:block; }
+
+/* ═══ COMPONENTS ═══ */
+.page-title { font-size:22px; font-weight:800; margin-bottom:4px; }
+.page-sub { font-size:13px; color:var(--text-secondary); margin-bottom:20px; }
+.page-actions { display:flex; gap:8px; margin-bottom:20px; }
+
+.btn { display:inline-flex; align-items:center; gap:5px; padding:7px 14px; border-radius:6px; font-size:12px; font-weight:600; cursor:pointer; border:none; transition:all 0.15s; }
+.btn-primary { background:var(--accent); color:#fff; }
+.btn-primary:hover { background:var(--accent-hover); }
+.btn-secondary { background:var(--card); color:var(--text); border:1px solid var(--border); }
+.btn-secondary:hover { background:var(--surface); }
+.btn-gold { background:var(--accent); color:#fff; }
+.btn-gold:hover { background:var(--accent-hover); }
+.btn-sm { padding:4px 10px; font-size:11px; }
+.btn-ghost { background:transparent; color:var(--text-secondary); border:1px solid var(--border); }
+
+.kpi-row { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:20px; }
+.kpi { background:var(--card); border:1px solid var(--border); border-radius:var(--radius); padding:16px; box-shadow:var(--shadow); }
+.kpi-label { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; color:var(--text-secondary); }
+.kpi-value { font-size:28px; font-weight:900; margin:2px 0; color:var(--primary); }
+.kpi-delta { font-size:11px; font-weight:600; }
+.kpi-delta.up { color:var(--success); }
+.kpi-delta.down { color:var(--danger); }
+.kpi-detail { font-size:10px; color:var(--text-secondary); margin-top:2px; }
+
+.card { background:var(--card); border:1px solid var(--border); border-radius:var(--radius); box-shadow:var(--shadow); overflow:hidden; }
+.card-h { padding:14px 16px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; }
+.card-h h3 { font-size:14px; font-weight:700; }
+.card-b { padding:16px; }
+
+.grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:16px; }
+.grid-3 { display:grid; grid-template-columns:2fr 1fr; gap:16px; margin-bottom:16px; }
+.grid-2-1 { display:grid; grid-template-columns:2fr 1fr; gap:16px; margin-bottom:16px; }
+
+/* Table */
+.dtable { width:100%; border-collapse:collapse; }
+.dtable th { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; color:var(--text-secondary); text-align:left; padding:8px 10px; border-bottom:2px solid var(--border); }
+.dtable td { padding:10px; border-bottom:1px solid var(--border); font-size:12px; }
+.dtable tr:hover td { background:rgba(59,130,246,0.02); }
+.dtable td.fw { font-weight:600; }
+
+.badge { display:inline-flex; align-items:center; gap:3px; font-size:10px; font-weight:600; padding:2px 8px; border-radius:4px; }
+.badge-green { background:#e8f5e9; color:#2e7d32; }
+.badge-blue { background:#f0f0f0; color:#0F1115; }
+.badge-yellow { background:#fff8e1; color:#b45309; }
+.badge-purple { background:#f3e8ff; color:#7c3aed; }
+.badge-red { background:#fee2e2; color:#991b1b; }
+.badge-gray { background:#f1f5f9; color:#475569; }
+
+/* Progress bar */
+.pbar { height:6px; background:#f1f5f9; border-radius:3px; overflow:hidden; }
+.pbar-fill { height:100%; border-radius:3px; transition:width 0.4s; }
+
+/* Tags */
+.tag { display:inline-block; font-size:10px; font-weight:600; padding:2px 6px; border-radius:3px; margin:1px 2px; }
+.tag-blue { background:#f0f0f0; color:#0F1115; }
+.tag-purple { background:#f3e8ff; color:#7c3aed; }
+.tag-green { background:#e8f5e9; color:#2e7d32; }
+.tag-gray { background:#f1f5f9; color:#64748b; }
+
+/* ═══ CALENDAR ═══ */
+.cal-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:1px; }
+.cal-hdr { font-size:10px; font-weight:700; color:var(--text-secondary); text-transform:uppercase; text-align:center; padding:6px 2px; }
+.cal-cell { min-height:80px; padding:4px; border:1px solid var(--border); border-radius:4px; background:var(--card); }
+.cal-cell.today { border-color:var(--accent); background:rgba(193,8,171,0.03); }
+.cal-day { font-size:10px; font-weight:600; color:var(--text-secondary); margin-bottom:3px; }
+.cal-ev { font-size:9px; font-weight:600; padding:2px 4px; border-radius:3px; margin-bottom:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; cursor:pointer; }
+.ev-nl { background:#f0f0f0; color:#0F1115; }
+.ev-wb { background:#e8f5e9; color:#2e7d32; }
+.ev-pd { background:#f3e8ff; color:#7c3aed; }
+.ev-li { background:#fff8e1; color:#b45309; }
+.ev-ln { background:#fce4ec; color:#c2185b; }
+.ev-eb { background:#ede9fe; color:#6d28d9; }
+
+/* ═══ JOURNEY ═══ */
+.journey-pipe { display:flex; gap:0; margin:16px 0; }
+.j-stage { flex:1; text-align:center; padding:12px 4px; position:relative; }
+.j-stage::after { content:'→'; position:absolute; right:-4px; top:50%; transform:translateY(-50%); color:var(--border); font-size:16px; }
+.j-stage:last-child::after { display:none; }
+.j-icon { width:40px; height:40px; border-radius:50%; margin:0 auto 6px; display:flex; align-items:center; justify-content:center; font-size:16px; border:2px solid var(--border); background:var(--card); }
+.j-stage.active .j-icon { border-color:var(--accent); background:rgba(233,69,96,0.08); box-shadow:0 0 0 3px rgba(233,69,96,0.1); }
+.j-label { font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; color:var(--text-secondary); }
+.j-count { font-size:18px; font-weight:900; margin-top:1px; }
+.j-stage.active .j-label { color:var(--accent); }
+
+/* ═══ TIMELINE ═══ */
+.timeline { position:relative; padding-left:28px; }
+.timeline::before { content:''; position:absolute; left:9px; top:0; bottom:0; width:2px; background:var(--border); }
+.t-step { position:relative; padding:8px 0 16px; }
+.t-dot { position:absolute; left:-23px; top:10px; width:10px; height:10px; border-radius:50%; border:2px solid var(--border); background:var(--card); }
+.t-step.done .t-dot { background:var(--success); border-color:var(--success); }
+.t-step.current .t-dot { background:var(--accent); border-color:var(--accent); box-shadow:0 0 0 3px rgba(233,69,96,0.15); }
+.t-label { font-size:10px; font-weight:600; color:var(--text-secondary); }
+.t-title { font-size:13px; font-weight:700; margin:1px 0; }
+.t-meta { font-size:10px; color:var(--text-secondary); }
+
+/* ═══ TEAM ═══ */
+.team-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
+.t-member { display:flex; align-items:center; gap:10px; padding:10px; border-radius:8px; border:1px solid var(--border); }
+.t-av { width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:11px; color:#fff; flex-shrink:0; }
+.t-name { font-size:12px; font-weight:600; }
+.t-role { font-size:10px; color:var(--text-secondary); }
+
+/* ═══ CHARTS (CSS-only) ═══ */
+.bar-chart { display:flex; align-items:flex-end; gap:6px; height:120px; padding-top:10px; }
+.bar { flex:1; border-radius:3px 3px 0 0; position:relative; min-width:20px; transition:height 0.4s; cursor:pointer; }
+.bar:hover { opacity:0.85; }
+.bar-label { position:absolute; bottom:-18px; left:50%; transform:translateX(-50%); font-size:9px; font-weight:600; color:var(--text-secondary); white-space:nowrap; }
+.bar-value { position:absolute; top:-16px; left:50%; transform:translateX(-50%); font-size:9px; font-weight:700; }
+
+/* Donut (CSS) */
+.donut-wrap { display:flex; align-items:center; gap:20px; }
+.donut { width:100px; height:100px; border-radius:50%; position:relative; }
+.donut-center { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:60px; height:60px; border-radius:50%; background:var(--card); display:flex; align-items:center; justify-content:center; font-size:16px; font-weight:900; }
+.donut-legend { display:flex; flex-direction:column; gap:6px; }
+.dl-item { display:flex; align-items:center; gap:6px; font-size:11px; }
+.dl-dot { width:8px; height:8px; border-radius:50%; }
+
+/* ═══ FORMS ═══ */
+.form-group { margin-bottom:12px; }
+.form-label { font-size:11px; font-weight:600; color:var(--text-secondary); margin-bottom:4px; display:block; }
+.form-input { width:100%; padding:8px 10px; border:1px solid var(--border); border-radius:6px; font-size:12px; font-family:inherit; }
+.form-input:focus { outline:none; border-color:var(--accent); box-shadow:0 0 0 3px rgba(233,69,96,0.1); }
+select.form-input { cursor:pointer; }
+.form-row { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+
+/* Tabs */
+.tabs { display:flex; gap:0; border-bottom:2px solid var(--border); margin-bottom:16px; }
+.tab { padding:8px 16px; font-size:12px; font-weight:600; color:var(--text-secondary); cursor:pointer; border-bottom:2px solid transparent; margin-bottom:-2px; transition:all 0.15s; }
+.tab:hover { color:var(--text); }
+.tab.active { color:var(--accent); border-bottom-color:var(--accent); }
+
+/* Modal */
+.modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.4); z-index:200; align-items:center; justify-content:center; }
+.modal-overlay.open { display:flex; }
+.modal { background:var(--card); border-radius:12px; width:520px; max-height:80vh; overflow-y:auto; box-shadow:var(--shadow-lg); }
+.modal-h { padding:16px 20px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; }
+.modal-h h3 { font-size:16px; font-weight:700; }
+.modal-close { cursor:pointer; font-size:18px; color:var(--text-secondary); background:none; border:none; }
+.modal-b { padding:20px; }
+.modal-f { padding:12px 20px; border-top:1px solid var(--border); display:flex; justify-content:flex-end; gap:8px; }
+
+/* Toast */
+.toast { position:fixed; bottom:24px; right:24px; background:var(--primary); color:#fff; padding:12px 20px; border-radius:8px; font-size:13px; font-weight:600; box-shadow:var(--shadow-lg); z-index:300; transform:translateY(100px); opacity:0; transition:all 0.3s; }
+.toast.show { transform:translateY(0); opacity:1; }
+
+/* Misc */
+.mt-12 { margin-top:12px; } .mt-16 { margin-top:16px; } .mb-16 { margin-bottom:16px; } .mb-20 { margin-bottom:20px; }
+.flex { display:flex; } .flex-between { display:flex; justify-content:space-between; align-items:center; } .gap-8 { gap:8px; } .gap-12 { gap:12px; }
+.text-sm { font-size:11px; } .text-xs { font-size:10px; } .fw-700 { font-weight:700; } .text-muted { color:var(--text-secondary); }
+.w-full { width:100%; }
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- ═══ SIDEBAR ═══ -->
+<aside class="sidebar">
+  <div class="sidebar-brand">
+    <h1>WAVE</h1>
+    <p>Marketing Operations</p>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-group">
+      <div class="nav-group-label">Overview</div>
+      <div class="nav-item active" data-page="dashboard"><span class="ni-icon">📊</span> Dashboard</div>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-label">Content</div>
+      <div class="nav-item" data-page="calendar"><span class="ni-icon">📅</span> Calendar <span class="ni-badge">12</span></div>
+      <div class="nav-item" data-page="assets"><span class="ni-icon">📁</span> Assets</div>
+      <div class="nav-item" data-page="templates"><span class="ni-icon">📝</span> Templates</div>
+      <div class="nav-item" data-page="repurposing"><span class="ni-icon">🔄</span> Repurposing <span class="ni-badge">3</span></div>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-label">Distribution</div>
+      <div class="nav-item" data-page="email"><span class="ni-icon">📧</span> Email Sequences</div>
+      <div class="nav-item" data-page="lists"><span class="ni-icon">👥</span> Mailing Lists</div>
+      <div class="nav-item" data-page="registrations"><span class="ni-icon">📋</span> Registrations</div>
+      <div class="nav-item" data-page="channels"><span class="ni-icon">📡</span> Channels</div>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-label">Journey</div>
+      <div class="nav-item" data-page="journey"><span class="ni-icon">🗺️</span> B2C Journey</div>
+      <div class="nav-item" data-page="triggers"><span class="ni-icon">⚡</span> Triggers</div>
+      <div class="nav-item" data-page="handoff"><span class="ni-icon">🔀</span> VISTA Handoff <span class="ni-badge" style="background:var(--gold);color:var(--primary)">2</span></div>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-label">Intelligence</div>
+      <div class="nav-item" data-page="analytics"><span class="ni-icon">📈</span> Analytics</div>
+      <div class="nav-item" data-page="campaigns"><span class="ni-icon">🎯</span> Campaigns</div>
+    </div>
+  </nav>
+  <div class="sidebar-user">
+    <div class="avatar">KH</div>
+    <div><div class="uname">Kevin Hong</div><div class="urole">Admin · CTO</div></div>
+  </div>
+</aside>
+
+<!-- ═══ MAIN ═══ -->
+<div class="main">
+  <div class="topbar">
+    <div class="topbar-stack"><span class="topbar-dot"></span> VISTA · BD</div>
+    <div class="topbar-stack"><span class="topbar-dot"></span> DEX AI · ATS</div>
+    <div class="topbar-stack active"><span class="topbar-dot"></span> WAVE · Marketing</div>
+    <div class="topbar-right">Supabase · 17,359 contacts · 11 products</div>
+  </div>
+
+  <div class="content">
+
+<!-- ═══════════════════════════════════════ -->
+<!-- PAGE: DASHBOARD -->
+<!-- ═══════════════════════════════════════ -->
+<div class="page active" id="page-dashboard">
+  <div class="page-title">Dashboard</div>
+  <div class="page-sub">Marketing operations overview — July 2026</div>
+  <div class="page-actions">
+    <button class="btn btn-primary" onclick="openModal('new-campaign')">+ New Campaign</button>
+    <button class="btn btn-secondary" onclick="navigateTo('calendar')">📅 Schedule Content</button>
+    <button class="btn btn-gold" onclick="navigateTo('repurposing')">⚡ Repurpose</button>
+  </div>
+
+  <div class="kpi-row">
+    <div class="kpi"><div class="kpi-label">Content Assets</div><div class="kpi-value">48</div><div class="kpi-delta up">↑ 12 this week</div><div class="kpi-detail">14 published · 8 scheduled · 26 pipeline</div></div>
+    <div class="kpi"><div class="kpi-label">Emails Sent (30d)</div><div class="kpi-value">6,241</div><div class="kpi-delta up">↑ 23%</div><div class="kpi-detail">Open 34.2% · Click 8.7%</div></div>
+    <div class="kpi"><div class="kpi-label">Journey Contacts</div><div class="kpi-value">1,847</div><div class="kpi-delta up">↑ 312 new</div><div class="kpi-detail">23 converted · 4 to Council</div></div>
+    <div class="kpi"><div class="kpi-label">Repurpose Ratio</div><div class="kpi-value">1:8.3</div><div class="kpi-delta up">↑ from 1:5.2</div><div class="kpi-detail">12 sources → 99 derivatives</div></div>
+  </div>
+
+  <div class="grid-3 mb-16">
+    <div class="card">
+      <div class="card-h"><h3>B2C Journey Pipeline</h3><button class="btn btn-sm btn-secondary" onclick="navigateTo('journey')">View All</button></div>
+      <div class="card-b">
+        <div class="journey-pipe">
+          <div class="j-stage"><div class="j-icon">👁</div><div class="j-label">Awareness</div><div class="j-count">1,847</div></div>
+          <div class="j-stage active"><div class="j-icon">💬</div><div class="j-label">Engage</div><div class="j-count">642</div></div>
+          <div class="j-stage"><div class="j-icon">📋</div><div class="j-label">Assess</div><div class="j-count">183</div></div>
+          <div class="j-stage"><div class="j-icon">📊</div><div class="j-label">Results</div><div class="j-count">156</div></div>
+          <div class="j-stage"><div class="j-icon">🔀</div><div class="j-label">Cross-sell</div><div class="j-count">89</div></div>
+          <div class="j-stage"><div class="j-icon">🏛</div><div class="j-label">Council</div><div class="j-count">23</div></div>
+          <div class="j-stage"><div class="j-icon">🔒</div><div class="j-label">Retain</div><div class="j-count">19</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-h"><h3>Channel Split</h3></div>
+      <div class="card-b">
+        <div class="donut-wrap">
+          <div class="donut" style="background:conic-gradient(var(--info) 0% 35%, var(--purple) 35% 55%, var(--success) 55% 72%, var(--gold) 72% 88%, var(--text-secondary) 88% 100%);">
+            <div class="donut-center">6.2K</div>
+          </div>
+          <div class="donut-legend">
+            <div class="dl-item"><span class="dl-dot" style="background:var(--info)"></span> Email 35%</div>
+            <div class="dl-item"><span class="dl-dot" style="background:var(--purple)"></span> LinkedIn 20%</div>
+            <div class="dl-item"><span class="dl-dot" style="background:var(--success)"></span> Website 17%</div>
+            <div class="dl-item"><span class="dl-dot" style="background:var(--gold)"></span> Podcast 16%</div>
+            <div class="dl-item"><span class="dl-dot" style="background:var(--text-secondary)"></span> Other 12%</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-h"><h3>Recent Activity</h3></div>
+      <div class="card-b" style="padding:8px 16px;">
+        <div style="padding:8px 0;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;">
+          <div><div style="font-size:12px;font-weight:600;">Newsletter #12 published</div><div class="text-xs text-muted">Echo · 2 hours ago</div></div>
+          <span class="badge badge-green">Published</span>
+        </div>
+        <div style="padding:8px 0;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;">
+          <div><div style="font-size:12px;font-weight:600;">BRIDGE webinar repurposed → 8 assets</div><div class="text-xs text-muted">NEXUS · 5 hours ago</div></div>
+          <span class="badge badge-blue">Repurposed</span>
+        </div>
+        <div style="padding:8px 0;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;">
+          <div><div style="font-size:12px;font-weight:600;">2 B2B signals detected → VISTA</div><div class="text-xs text-muted">System · 8 hours ago</div></div>
+          <span class="badge badge-yellow">Handoff</span>
+        </div>
+        <div style="padding:8px 0;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;">
+          <div><div style="font-size:12px;font-weight:600;">Podcast Ep.4 live on Ausha</div><div class="text-xs text-muted">Xuemei · 1 day ago</div></div>
+          <span class="badge badge-purple">Live</span>
+        </div>
+        <div style="padding:8px 0;display:flex;justify-content:space-between;align-items:center;">
+          <div><div style="font-size:12px;font-weight:600;">IMPACT landing page deployed</div><div class="text-xs text-muted">Valentina · 1 day ago</div></div>
+          <span class="badge badge-green">Deployed</span>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-h"><h3>Performance (30d)</h3></div>
+      <div class="card-b">
+        <div style="margin-bottom:12px;"><div class="flex-between text-sm" style="margin-bottom:4px;"><span class="fw-700">Email Open Rate</span><span class="fw-700" style="color:var(--info)">34.2%</span></div><div class="pbar"><div class="pbar-fill" style="width:68%;background:var(--info)"></div></div></div>
+        <div style="margin-bottom:12px;"><div class="flex-between text-sm" style="margin-bottom:4px;"><span class="fw-700">LinkedIn Engagement</span><span class="fw-700" style="color:#0A66C2">4.8%</span></div><div class="pbar"><div class="pbar-fill" style="width:48%;background:#0A66C2"></div></div></div>
+        <div style="margin-bottom:12px;"><div class="flex-between text-sm" style="margin-bottom:4px;"><span class="fw-700">Podcast Downloads</span><span class="fw-700" style="color:var(--purple)">1,247</span></div><div class="pbar"><div class="pbar-fill" style="width:55%;background:var(--purple)"></div></div></div>
+        <div style="margin-bottom:12px;"><div class="flex-between text-sm" style="margin-bottom:4px;"><span class="fw-700">Website Visitors</span><span class="fw-700" style="color:var(--teal)">3,891</span></div><div class="pbar"><div class="pbar-fill" style="width:62%;background:var(--teal)"></div></div></div>
+        <div><div class="flex-between text-sm" style="margin-bottom:4px;"><span class="fw-700">Webinar Registrations</span><span class="fw-700" style="color:var(--success)">186</span></div><div class="pbar"><div class="pbar-fill" style="width:38%;background:var(--success)"></div></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- PAGE: CALENDAR -->
+<!-- ═══════════════════════════════════════ -->
+<div class="page" id="page-calendar">
+  <div class="page-title">Content Calendar</div>
+  <div class="page-sub">Editorial calendar — all channels and content types</div>
+  <div class="page-actions">
+    <button class="btn btn-primary" onclick="openModal('new-content')">+ New Content</button>
+    <button class="btn btn-secondary">Week</button>
+    <button class="btn btn-primary">Month</button>
+    <button class="btn btn-ghost">← July 2026 →</button>
+  </div>
+  <div class="card">
+    <div class="card-b" style="padding:12px;">
+      <div class="cal-grid">
+        <div class="cal-hdr">Mon</div><div class="cal-hdr">Tue</div><div class="cal-hdr">Wed</div><div class="cal-hdr">Thu</div><div class="cal-hdr">Fri</div><div class="cal-hdr">Sat</div><div class="cal-hdr">Sun</div>
+        <div class="cal-cell"><div class="cal-day">6</div></div>
+        <div class="cal-cell"><div class="cal-day">7</div><div class="cal-ev ev-nl">Newsletter #12</div></div>
+        <div class="cal-cell"><div class="cal-day">8</div><div class="cal-ev ev-li">LI: BRIDGE insights</div></div>
+        <div class="cal-cell today"><div class="cal-day" style="color:var(--accent);font-weight:800">9</div><div class="cal-ev ev-pd">Podcast Ep.4</div><div class="cal-ev ev-eb">Exec Brief #6</div></div>
+        <div class="cal-cell"><div class="cal-day">10</div><div class="cal-ev ev-wb">BRIDGE Webinar</div></div>
+        <div class="cal-cell"><div class="cal-day">11</div><div class="cal-ev ev-li">LI: SPARK teaser</div></div>
+        <div class="cal-cell"><div class="cal-day">12</div></div>
+        <div class="cal-cell"><div class="cal-day">13</div></div>
+        <div class="cal-cell"><div class="cal-day">14</div><div class="cal-ev ev-nl">Newsletter #13</div></div>
+        <div class="cal-cell"><div class="cal-day">15</div><div class="cal-ev ev-ln">IMPACT Launch</div></div>
+        <div class="cal-cell"><div class="cal-day">16</div><div class="cal-ev ev-li">LI: IMPACT series</div></div>
+        <div class="cal-cell"><div class="cal-day">17</div><div class="cal-ev ev-pd">Podcast Ep.5</div></div>
+        <div class="cal-cell"><div class="cal-day">18</div><div class="cal-ev ev-eb">Exec Brief #7</div></div>
+        <div class="cal-cell"><div class="cal-day">19</div></div>
+        <div class="cal-cell"><div class="cal-day">20</div></div>
+        <div class="cal-cell"><div class="cal-day">21</div><div class="cal-ev ev-nl">Newsletter #14</div></div>
+        <div class="cal-cell"><div class="cal-day">22</div><div class="cal-ev ev-wb">SPARK Workshop</div></div>
+        <div class="cal-cell"><div class="cal-day">23</div><div class="cal-ev ev-li">LI: Council teaser</div></div>
+        <div class="cal-cell"><div class="cal-day">24</div><div class="cal-ev ev-pd">Podcast Ep.6</div></div>
+        <div class="cal-cell"><div class="cal-day">25</div><div class="cal-ev ev-wb">MOSAIC Webinar</div></div>
+        <div class="cal-cell"><div class="cal-day">26</div></div>
+        <div class="cal-cell"><div class="cal-day">27</div></div>
+        <div class="cal-cell"><div class="cal-day">28</div><div class="cal-ev ev-nl">Newsletter #15</div><div class="cal-ev ev-li">LI: Month review</div></div>
+        <div class="cal-cell"><div class="cal-day">29</div></div>
+        <div class="cal-cell"><div class="cal-day">30</div><div class="cal-ev ev-eb">Exec Brief #8</div></div>
+        <div class="cal-cell"><div class="cal-day">31</div></div>
+        <div class="cal-cell"><div class="cal-day">1</div></div>
+        <div class="cal-cell"><div class="cal-day">2</div></div>
+      </div>
+      <div style="display:flex;gap:12px;margin-top:12px;flex-wrap:wrap;">
+        <span style="display:flex;align-items:center;gap:4px;font-size:10px;color:var(--text-secondary)"><span style="width:10px;height:10px;border-radius:2px;background:#f0f0f0"></span>Newsletter</span>
+        <span style="display:flex;align-items:center;gap:4px;font-size:10px;color:var(--text-secondary)"><span style="width:10px;height:10px;border-radius:2px;background:#e8f5e9"></span>Webinar</span>
+        <span style="display:flex;align-items:center;gap:4px;font-size:10px;color:var(--text-secondary)"><span style="width:10px;height:10px;border-radius:2px;background:#f3e8ff"></span>Podcast</span>
+        <span style="display:flex;align-items:center;gap:4px;font-size:10px;color:var(--text-secondary)"><span style="width:10px;height:10px;border-radius:2px;background:#fff8e1"></span>LinkedIn</span>
+        <span style="display:flex;align-items:center;gap:4px;font-size:10px;color:var(--text-secondary)"><span style="width:10px;height:10px;border-radius:2px;background:#fce4ec"></span>Launch</span>
+        <span style="display:flex;align-items:center;gap:4px;font-size:10px;color:var(--text-secondary)"><span style="width:10px;height:10px;border-radius:2px;background:#ede9fe"></span>Exec Brief</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- PAGE: ASSETS -->
+<!-- ═══════════════════════════════════════ -->
+<div class="page" id="page-assets">
+  <div class="page-title">Asset Library</div>
+  <div class="page-sub">All content assets with status, owner, and campaign mapping</div>
+  <div class="page-actions">
+    <button class="btn btn-primary" onclick="openModal('new-content')">+ New Asset</button>
+    <button class="btn btn-secondary">Filter</button>
+    <button class="btn btn-secondary">Export CSV</button>
+  </div>
+  <div class="tabs">
+    <div class="tab active">All (48)</div>
+    <div class="tab">Published (14)</div>
+    <div class="tab">Scheduled (8)</div>
+    <div class="tab">In Review (6)</div>
+    <div class="tab">Draft (20)</div>
+  </div>
+  <div class="card">
+    <div class="card-b" style="padding:0;">
+      <table class="dtable">
+        <thead><tr><th>Asset</th><th>Type</th><th>Campaign</th><th>Channel</th><th>Owner</th><th>Status</th><th>Date</th></tr></thead>
+        <tbody>
+          <tr><td class="fw">IMPACT Launch Article</td><td>Article</td><td>IMPACT Phase 1A</td><td>Website</td><td>Echo</td><td><span class="badge badge-purple">In Review</span></td><td>Jul 15</td></tr>
+          <tr><td class="fw">SPARK Teaser ×3</td><td>LinkedIn</td><td>SPARK Awareness</td><td>LinkedIn</td><td>Echo</td><td><span class="badge badge-yellow">Draft</span></td><td>Jul 16</td></tr>
+          <tr><td class="fw">BRIDGE Case Study #2</td><td>PDF</td><td>BRIDGE Nurture</td><td>Email</td><td>Xuemei</td><td><span class="badge badge-blue">Scheduled</span></td><td>Jul 18</td></tr>
+          <tr><td class="fw">Newsletter #13</td><td>Newsletter</td><td>Multi-product</td><td>Email</td><td>Echo</td><td><span class="badge badge-yellow">Draft</span></td><td>Jul 14</td></tr>
+          <tr><td class="fw">Podcast Ep.5 Script</td><td>Podcast</td><td>Gravitas Shift</td><td>Ausha</td><td>Xuemei</td><td><span class="badge badge-green">Approved</span></td><td>Jul 17</td></tr>
+          <tr><td class="fw">IMPACT Webinar Promo</td><td>Email+LP</td><td>IMPACT Phase 1A</td><td>Email+Web</td><td>Emily</td><td><span class="badge badge-yellow">Draft</span></td><td>Jul 20</td></tr>
+          <tr><td class="fw">MOSAIC Blog Post</td><td>Article</td><td>MOSAIC Awareness</td><td>Website</td><td>Echo</td><td><span class="badge badge-purple">In Review</span></td><td>Jul 22</td></tr>
+          <tr><td class="fw">Council Invitation Email</td><td>Email</td><td>Council Q3</td><td>Email</td><td>Maria</td><td><span class="badge badge-blue">Scheduled</span></td><td>Jul 25</td></tr>
+          <tr><td class="fw">FORGE One-Pager</td><td>PDF</td><td>FORGE Launch</td><td>Email</td><td>NEXUS</td><td><span class="badge badge-yellow">Draft</span></td><td>Jul 28</td></tr>
+          <tr><td class="fw">Webinar Recording: BRIDGE</td><td>Video</td><td>BRIDGE Nurture</td><td>YouTube</td><td>Carl</td><td><span class="badge badge-green">Published</span></td><td>Jul 3</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- PAGE: TEMPLATES -->
+<!-- ═══════════════════════════════════════ -->
+<div class="page" id="page-templates">
+  <div class="page-title">Template Library</div>
+  <div class="page-sub">Standardized templates for all content types</div>
+  <div class="page-actions">
+    <button class="btn btn-primary" onclick="openModal('new-template')">+ New Template</button>
+    <button class="btn btn-secondary">Import</button>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;">
+    <div class="card" style="cursor:pointer"><div class="card-b" style="text-align:center;padding:24px 16px;"><div style="font-size:32px;margin-bottom:8px;">📧</div><div style="font-size:14px;font-weight:700;">Newsletter</div><div class="text-xs text-muted mt-12">3 variants · Insights, Launch, Thought Leadership</div><div class="mt-12"><span class="badge badge-green">Active</span></div></div></div>
+    <div class="card" style="cursor:pointer"><div class="card-b" style="text-align:center;padding:24px 16px;"><div style="font-size:32px;margin-bottom:8px;">🎥</div><div style="font-size:14px;font-weight:700;">Webinar Promo</div><div class="text-xs text-muted mt-12">Invite + Reminder + Follow-up sequence</div><div class="mt-12"><span class="badge badge-green">Active</span></div></div></div>
+    <div class="card" style="cursor:pointer"><div class="card-b" style="text-align:center;padding:24px 16px;"><div style="font-size:32px;margin-bottom:8px;">📋</div><div style="font-size:14px;font-weight:700;">Executive Brief</div><div class="text-xs text-muted mt-12">Standard format · Data-driven · 2-page max</div><div class="mt-12"><span class="badge badge-green">Active</span></div></div></div>
+    <div class="card" style="cursor:pointer"><div class="card-b" style="text-align:center;padding:24px 16px;"><div style="font-size:32px;margin-bottom:8px;">💼</div><div style="font-size:14px;font-weight:700;">LinkedIn Post</div><div class="text-xs text-muted mt-12">By persona: CHRO, CEO, Board, HR Director</div><div class="mt-12"><span class="badge badge-green">Active</span></div></div></div>
+    <div class="card" style="cursor:pointer"><div class="card-b" style="text-align:center;padding:24px 16px;"><div style="font-size:32px;margin-bottom:8px;">🎙</div><div style="font-size:14px;font-weight:700;">Podcast Show Notes</div><div class="text-xs text-muted mt-12">Ausha format · Chapters · Guest bio</div><div class="mt-12"><span class="badge badge-green">Active</span></div></div></div>
+    <div class="card" style="cursor:pointer"><div class="card-b" style="text-align:center;padding:24px 16px;"><div style="font-size:32px;margin-bottom:8px;">🎬</div><div style="font-size:14px;font-weight:700;">YouTube Description</div><div class="text-xs text-muted mt-12">Chapters · Links · SEO optimized</div><div class="mt-12"><span class="badge badge-green">Active</span></div></div></div>
+    <div class="card" style="cursor:pointer"><div class="card-b" style="text-align:center;padding:24px 16px;"><div style="font-size:32px;margin-bottom:8px;">📝</div><div style="font-size:14px;font-weight:700;">Email Sequence</div><div class="text-xs text-muted mt-12">5 types: Welcome, Nurture, Launch, Cross-sell, Re-engage</div><div class="mt-12"><span class="badge badge-green">Active</span></div></div></div>
+    <div class="card" style="cursor:pointer"><div class="card-b" style="text-align:center;padding:24px 16px;"><div style="font-size:32px;margin-bottom:8px;">🌐</div><div style="font-size:14px;font-weight:700;">Landing Page</div><div class="text-xs text-muted mt-12">Product · Event · Assessment · Council</div><div class="mt-12"><span class="badge badge-blue">Vercel</span></div></div></div>
+    <div class="card" style="cursor:pointer"><div class="card-b" style="text-align:center;padding:24px 16px;"><div style="font-size:32px;margin-bottom:8px;">📋</div><div style="font-size:14px;font-weight:700;">Registration Form</div><div class="text-xs text-muted mt-12">Webinar · Workshop · Program · Event</div><div class="mt-12"><span class="badge badge-green">Active</span></div></div></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- PAGE: REPURPOSING -->
+<!-- ═══════════════════════════════════════ -->
+<div class="page" id="page-repurposing">
+  <div class="page-title">Content Repurposing</div>
+  <div class="page-sub">Transform source assets into multiple derivatives</div>
+  <div class="page-actions">
+    <button class="btn btn-primary" onclick="openModal('new-repurpose')">+ New Repurpose Map</button>
+    <button class="btn btn-gold">⚡ Auto-Repurpose</button>
+  </div>
+  <div class="grid-2 mb-16">
+    <div class="kpi"><div class="kpi-label">Source Assets</div><div class="kpi-value">12</div><div class="kpi-detail">This month</div></div>
+    <div class="kpi"><div class="kpi-label">Total Derivatives</div><div class="kpi-value">99</div><div class="kpi-delta up">↑ Ratio 1:8.3</div></div>
+  </div>
+  <div class="card mb-16">
+    <div class="card-h"><h3>BRIDGE Webinar → 8 Derivatives</h3><span class="badge badge-green">8/10 Complete</span></div>
+    <div class="card-b">
+      <div style="display:flex;align-items:flex-start;gap:16px;">
+        <div style="min-width:140px;background:var(--primary);color:#fff;border-radius:8px;padding:14px;text-align:center;flex-shrink:0;">
+          <div style="font-size:24px;margin-bottom:6px;">🎥</div>
+          <div class="text-xs" style="opacity:0.5;text-transform:uppercase;letter-spacing:1px;">Source</div>
+          <div style="font-size:12px;font-weight:600;margin-top:4px;">BRIDGE Webinar</div>
+          <div class="text-xs" style="opacity:0.4;margin-top:4px;">Riverside · 62 min</div>
+        </div>
+        <div style="font-size:20px;color:var(--border);padding-top:24px;">→</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;flex:1;">
+          <div style="display:flex;align-items:center;gap:6px;padding:6px 10px;border:1px solid var(--border);border-radius:6px;font-size:11px;">📄 Summary Article <span class="badge badge-green" style="margin-left:auto">Done</span></div>
+          <div style="display:flex;align-items:center;gap:6px;padding:6px 10px;border:1px solid var(--border);border-radius:6px;font-size:11px;">💼 LinkedIn ×3 <span class="badge badge-green" style="margin-left:auto">Done</span></div>
+          <div style="display:flex;align-items:center;gap:6px;padding:6px 10px;border:1px solid var(--border);border-radius:6px;font-size:11px;">📧 Newsletter Excerpt <span class="badge badge-green" style="margin-left:auto">Done</span></div>
+          <div style="display:flex;align-items:center;gap:6px;padding:6px 10px;border:1px solid var(--border);border-radius:6px;font-size:11px;">🎙 Podcast Episode <span class="badge badge-green" style="margin-left:auto">Done</span></div>
+          <div style="display:flex;align-items:center;gap:6px;padding:6px 10px;border:1px solid var(--border);border-radius:6px;font-size:11px;">🎬 YouTube Clips ×2 <span class="badge badge-yellow" style="margin-left:auto">Draft</span></div>
+          <div style="display:flex;align-items:center;gap:6px;padding:6px 10px;border:1px solid var(--border);border-radius:6px;font-size:11px;">📋 Executive Brief <span class="badge badge-green" style="margin-left:auto">Done</span></div>
+          <div style="display:flex;align-items:center;gap:6px;padding:6px 10px;border:1px solid var(--border);border-radius:6px;font-size:11px;">📱 Social Snippets ×5 <span class="badge badge-blue" style="margin-left:auto">Scheduled</span></div>
+          <div style="display:flex;align-items:center;gap:6px;padding:6px 10px;border:1px solid var(--border);border-radius:6px;font-size:11px;">📊 Data Library <span class="badge badge-gray" style="margin-left:auto">Pending</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-h"><h3>All Repurpose Maps</h3></div>
+    <div class="card-b" style="padding:0;">
+      <table class="dtable">
+        <thead><tr><th>Source</th><th>Type</th><th>Derivatives</th><th>Done</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td class="fw">BRIDGE Webinar</td><td>Webinar</td><td>8</td><td>6/8</td><td><span class="badge badge-green">80%</span></td></tr>
+          <tr><td class="fw">LEAP Research Paper</td><td>Research</td><td>6</td><td>6/6</td><td><span class="badge badge-green">100%</span></td></tr>
+          <tr><td class="fw">Podcast Ep.3: AI in CHRO</td><td>Podcast</td><td>5</td><td>5/5</td><td><span class="badge badge-green">100%</span></td></tr>
+          <tr><td class="fw">SPARK Keynote</td><td>Keynote</td><td>7</td><td>3/7</td><td><span class="badge badge-yellow">43%</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- PAGE: EMAIL SEQUENCES -->
+<!-- ═══════════════════════════════════════ -->
+<div class="page" id="page-email">
+  <div class="page-title">Email Sequences</div>
+  <div class="page-sub">Automated email flows for nurture, launch, cross-sell, and more</div>
+  <div class="page-actions">
+    <button class="btn btn-primary" onclick="openModal('new-sequence')">+ New Sequence</button>
+  </div>
+  <div class="grid-2 mb-16">
+    <div class="kpi"><div class="kpi-label">Active Sequences</div><div class="kpi-value">5</div></div>
+    <div class="kpi"><div class="kpi-label">Total Enrolled</div><div class="kpi-value">3,847</div></div>
+  </div>
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-h"><h3>BRIDGE Nurture Sequence</h3><span class="badge badge-green">Active</span></div>
+      <div class="card-b">
+        <div class="timeline">
+          <div class="t-step done"><div class="t-dot"></div><div class="t-label">Day 0 · Jul 2</div><div class="t-title">Welcome: China Board Readiness</div><div class="t-meta">1,247 sent · 42% opened · 12% clicked</div></div>
+          <div class="t-step done"><div class="t-dot"></div><div class="t-label">Day 3 · Jul 5</div><div class="t-title">Case Study: APAC Governance Gap</div><div class="t-meta">1,189 sent · 38% opened · 9% clicked</div></div>
+          <div class="t-step current"><div class="t-dot"></div><div class="t-label">Day 7 · Jul 9 (Today)</div><div class="t-title">Insight: What Boards Actually Evaluate</div><div class="t-meta">1,102 recipients · Sends 10:00 SGT</div></div>
+          <div class="t-step"><div class="t-dot"></div><div class="t-label">Day 14 · Jul 16</div><div class="t-title">Offer: BRIDGE Assessment Early Access</div><div class="t-meta">Draft · Pending approval</div></div>
+          <div class="t-step"><div class="t-dot"></div><div class="t-label">Day 21 · Jul 23</div><div class="t-title">Cross-sell: SPARK AI Readiness</div><div class="t-meta">Not started</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-h"><h3>All Sequences</h3></div>
+      <div class="card-b" style="padding:0;">
+        <table class="dtable">
+          <thead><tr><th>Sequence</th><th>Type</th><th>Enrolled</th><th>Conv.</th></tr></thead>
+          <tbody>
+            <tr><td class="fw">BRIDGE Nurture</td><td><span class="badge badge-blue">Nurture</span></td><td>1,247</td><td>3.2%</td></tr>
+            <tr><td class="fw">Welcome Series</td><td><span class="badge badge-green">Welcome</span></td><td>1,847</td><td>5.1%</td></tr>
+            <tr><td class="fw">IMPACT Launch</td><td><span class="badge badge-purple">Launch</span></td><td>423</td><td>—</td></tr>
+            <tr><td class="fw">PRISM Cross-sell</td><td><span class="badge badge-yellow">Cross-sell</span></td><td>189</td><td>8.4%</td></tr>
+            <tr><td class="fw">Re-engagement</td><td><span class="badge badge-gray">Re-engage</span></td><td>141</td><td>2.1%</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- PAGE: MAILING LISTS -->
+<!-- ═══════════════════════════════════════ -->
+<div class="page" id="page-lists">
+  <div class="page-title">Mailing Lists</div>
+  <div class="page-sub">Segmented contact lists for targeted distribution</div>
+  <div class="page-actions">
+    <button class="btn btn-primary" onclick="openModal('new-list')">+ New List</button>
+    <button class="btn btn-secondary">Import Contacts</button>
+  </div>
+  <div class="kpi-row">
+    <div class="kpi"><div class="kpi-label">Total Contacts</div><div class="kpi-value">17,359</div><div class="kpi-delta up">↑ 312 this week</div></div>
+    <div class="kpi"><div class="kpi-label">Active Lists</div><div class="kpi-value">8</div></div>
+    <div class="kpi"><div class="kpi-label">Avg. Engagement</div><div class="kpi-value">34.2%</div><div class="kpi-delta up">↑ 2.1%</div></div>
+    <div class="kpi"><div class="kpi-label">Unsubscribe Rate</div><div class="kpi-value">0.3%</div><div class="kpi-delta up">Healthy</div></div>
+  </div>
+  <div class="card">
+    <div class="card-h"><h3>All Lists</h3></div>
+    <div class="card-b" style="padding:0;">
+      <table class="dtable">
+        <thead><tr><th>List Name</th><th>Type</th><th>Members</th><th>Engagement</th><th>Manager</th><th>Last Sent</th></tr></thead>
+        <tbody>
+          <tr><td class="fw">All Contacts</td><td><span class="badge badge-gray">Master</span></td><td>17,359</td><td>34.2%</td><td>Maria</td><td>Jul 7</td></tr>
+          <tr><td class="fw">Cluster A: China Executives</td><td><span class="badge badge-blue">Cluster</span></td><td>3,241</td><td>41.8%</td><td>Maria</td><td>Jul 7</td></tr>
+          <tr><td class="fw">Cluster B: Tech/AI Leaders</td><td><span class="badge badge-blue">Cluster</span></td><td>2,187</td><td>38.4%</td><td>Maria</td><td>Jul 7</td></tr>
+          <tr><td class="fw">Cluster E: Cross-cultural</td><td><span class="badge badge-blue">Cluster</span></td><td>1,892</td><td>36.1%</td><td>Maria</td><td>Jul 5</td></tr>
+          <tr><td class="fw">Signal Council Members</td><td><span class="badge badge-purple">VIP</span></td><td>23</td><td>87.2%</td><td>Kevin</td><td>Jul 1</td></tr>
+          <tr><td class="fw">Webinar Attendees</td><td><span class="badge badge-green">Event</span></td><td>847</td><td>52.3%</td><td>Emily</td><td>Jul 3</td></tr>
+          <tr><td class="fw">BRIDGE Nurture Cohort</td><td><span class="badge badge-yellow">Nurture</span></td><td>1,247</td><td>39.7%</td><td>Maria</td><td>Jul 9</td></tr>
+          <tr><td class="fw">Assessment Buyers</td><td><span class="badge badge-green">Customer</span></td><td>156</td><td>61.4%</td><td>Maria</td><td>Jul 8</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- PAGE: REGISTRATIONS -->
+<!-- ═══════════════════════════════════════ -->
+<div class="page" id="page-registrations">
+  <div class="page-title">Registrations</div>
+  <div class="page-sub">Event, webinar, workshop, and program registrations</div>
+  <div class="page-actions">
+    <button class="btn btn-primary" onclick="openModal('new-event')">+ New Event</button>
+    <button class="btn btn-secondary">Create Form</button>
+  </div>
+  <div class="kpi-row">
+    <div class="kpi"><div class="kpi-label">Total Registrations</div><div class="kpi-value">1,033</div><div class="kpi-delta up">↑ 186 this week</div></div>
+    <div class="kpi"><div class="kpi-label">Upcoming Events</div><div class="kpi-value">4</div></div>
+    <div class="kpi"><div class="kpi-label">Attendance Rate</div><div class="kpi-value">62%</div></div>
+    <div class="kpi"><div class="kpi-label">Revenue from Events</div><div class="kpi-value">$12.4K</div></div>
+  </div>
+  <div class="card">
+    <div class="card-h"><h3>Events</h3></div>
+    <div class="card-b" style="padding:0;">
+      <table class="dtable">
+        <thead><tr><th>Event</th><th>Type</th><th>Date</th><th>Registered</th><th>Attended</th><th>Owner</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td class="fw">BRIDGE Webinar: China Board Dynamics</td><td>Webinar</td><td>Jul 3 ✓</td><td>186</td><td>115</td><td>Carl</td><td><span class="badge badge-green">Completed</span></td></tr>
+          <tr><td class="fw">BRIDGE Deep-Dive Webinar</td><td>Webinar</td><td>Jul 10</td><td>142</td><td>—</td><td>Carl</td><td><span class="badge badge-blue">Upcoming</span></td></tr>
+          <tr><td class="fw">SPARK AI Readiness Workshop</td><td>Workshop</td><td>Jul 22</td><td>67</td><td>—</td><td>Carl</td><td><span class="badge badge-blue">Upcoming</span></td></tr>
+          <tr><td class="fw">IMPACT Launch Webinar</td><td>Webinar</td><td>Jul 15</td><td>89</td><td>—</td><td>Carl</td><td><span class="badge badge-blue">Upcoming</span></td></tr>
+          <tr><td class="fw">Council Q3 Summit</td><td>Event</td><td>Aug 5</td><td>—</td><td>—</td><td>Emily</td><td><span class="badge badge-yellow">Planning</span></td></tr>
+          <tr><td class="fw">MOSAIC Cross-Cultural Webinar</td><td>Webinar</td><td>Jul 25</td><td>54</td><td>—</td><td>Carl</td><td><span class="badge badge-blue">Upcoming</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- PAGE: CHANNELS -->
+<!-- ═══════════════════════════════════════ -->
+<div class="page" id="page-channels">
+  <div class="page-title">Channels</div>
+  <div class="page-sub">Connected distribution channels and publishing status</div>
+  <div class="page-actions">
+    <button class="btn btn-primary">+ Connect Channel</button>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;">
+    <div class="card"><div class="card-b" style="text-align:center;padding:20px;"><div style="font-size:28px;margin-bottom:8px;">📧</div><div style="font-size:14px;font-weight:700;">Email (MS Graph)</div><div class="text-xs text-muted mt-12">Maria · Lead manager</div><div class="mt-12"><span class="badge badge-green">Connected</span></div><div class="mt-12 text-xs">6,241 sent · 34.2% open</div></div></div>
+    <div class="card"><div class="card-b" style="text-align:center;padding:20px;"><div style="font-size:28px;margin-bottom:8px;">💼</div><div style="font-size:14px;font-weight:700;">LinkedIn</div><div class="text-xs text-muted mt-12">Echo · Content execution</div><div class="mt-12"><span class="badge badge-green">Connected</span></div><div class="mt-12 text-xs">23 posts · 4.8% engagement</div></div></div>
+    <div class="card"><div class="card-b" style="text-align:center;padding:20px;"><div style="font-size:28px;margin-bottom:8px;">🌐</div><div style="font-size:14px;font-weight:700;">Website (Vercel)</div><div class="text-xs text-muted mt-12">Valentina · Website manager</div><div class="mt-12"><span class="badge badge-green">Connected</span></div><div class="mt-12 text-xs">3,891 visitors · 11 product pages</div></div></div>
+    <div class="card"><div class="card-b" style="text-align:center;padding:20px;"><div style="font-size:28px;margin-bottom:8px;">🎙</div><div style="font-size:14px;font-weight:700;">Podcast (Ausha)</div><div class="text-xs text-muted mt-12">Echo + Xuemei · Scripts</div><div class="mt-12"><span class="badge badge-green">Connected</span></div><div class="mt-12 text-xs">4 episodes · 1,247 downloads</div></div></div>
+    <div class="card"><div class="card-b" style="text-align:center;padding:20px;"><div style="font-size:28px;margin-bottom:8px;">🎬</div><div style="font-size:14px;font-weight:700;">YouTube</div><div class="text-xs text-muted mt-12">Echo · Video distribution</div><div class="mt-12"><span class="badge badge-yellow">Pending Setup</span></div><div class="mt-12 text-xs">Awaiting channel creation</div></div></div>
+    <div class="card"><div class="card-b" style="text-align:center;padding:20px;"><div style="font-size:28px;margin-bottom:8px;">🎥</div><div style="font-size:14px;font-weight:700;">Riverside (Recording)</div><div class="text-xs text-muted mt-12">Carl + Xuemei · Production</div><div class="mt-12"><span class="badge badge-green">Connected</span></div><div class="mt-12 text-xs">3 recordings this month</div></div></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- PAGE: B2C JOURNEY -->
+<!-- ═══════════════════════════════════════ -->
+<div class="page" id="page-journey">
+  <div class="page-title">B2C Journey Engine</div>
+  <div class="page-sub">Automated, zero-human-sales customer funnel</div>
+  <div class="page-actions">
+    <button class="btn btn-primary" onclick="openModal('new-journey')">+ New Journey</button>
+    <button class="btn btn-secondary">Journey Builder</button>
+  </div>
+  <div class="card mb-16">
+    <div class="card-h"><h3>Journey Pipeline</h3></div>
+    <div class="card-b">
+      <div class="journey-pipe">
+        <div class="j-stage"><div class="j-icon">👁</div><div class="j-label">Awareness</div><div class="j-count">1,847</div></div>
+        <div class="j-stage active"><div class="j-icon">💬</div><div class="j-label">Engage</div><div class="j-count">642</div></div>
+        <div class="j-stage"><div class="j-icon">📋</div><div class="j-label">Assess</div><div class="j-count">183</div></div>
+        <div class="j-stage"><div class="j-icon">📊</div><div class="j-label">Results</div><div class="j-count">156</div></div>
+        <div class="j-stage"><div class="j-icon">🔀</div><div class="j-label">Cross-sell</div><div class="j-count">89</div></div>
+        <div class="j-stage"><div class="j-icon">🏛</div><div class="j-label">Council</div><div class="j-count">23</div></div>
+        <div class="j-stage"><div class="j-icon">🔒</div><div class="j-label">Retain</div><div class="j-count">19</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-h"><h3>Active Journeys</h3></div>
+      <div class="card-b" style="padding:0;">
+        <table class="dtable">
+          <thead><tr><th>Journey</th><th>Contacts</th><th>Conv.</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td class="fw">PRISM → LEAP → Council</td><td>1,847</td><td>2.4%</td><td><span class="badge badge-green">Active</span></td></tr>
+            <tr><td class="fw">BRIDGE Webinar → Assessment</td><td>186</td><td>8.1%</td><td><span class="badge badge-green">Active</span></td></tr>
+            <tr><td class="fw">SPARK Content → Diagnostic</td><td>423</td><td>1.2%</td><td><span class="badge badge-yellow">Building</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-h"><h3>Recent Conversions</h3></div>
+      <div class="card-b" style="padding:8px 16px;">
+        <div style="padding:6px 0;border-bottom:1px solid var(--border);font-size:12px;"><span class="fw-700">J. Chen</span> → Completed PRISM → Cross-sold LEAP <span class="text-xs text-muted" style="float:right">2h ago</span></div>
+        <div style="padding:6px 0;border-bottom:1px solid var(--border);font-size:12px;"><span class="fw-700">M. Tanaka</span> → Attended BRIDGE webinar → Purchased assessment <span class="text-xs text-muted" style="float:right">5h ago</span></div>
+        <div style="padding:6px 0;border-bottom:1px solid var(--border);font-size:12px;"><span class="fw-700">R. Singh</span> → 5 content touches → Entered nurture <span class="text-xs text-muted" style="float:right">1d ago</span></div>
+        <div style="padding:6px 0;font-size:12px;"><span class="fw-700">S. Park</span> → Council invitation accepted <span class="text-xs text-muted" style="float:right">2d ago</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- PAGE: TRIGGERS -->
+<!-- ═══════════════════════════════════════ -->
+<div class="page" id="page-triggers">
+  <div class="page-title">Triggers</div>
+  <div class="page-sub">Automation rules that drive the B2C journey</div>
+  <div class="page-actions">
+    <button class="btn btn-primary" onclick="openModal('new-trigger')">+ New Trigger</button>
+  </div>
+  <div class="card">
+    <div class="card-b" style="padding:0;">
+      <table class="dtable">
+        <thead><tr><th>Trigger</th><th>Condition</th><th>Action</th><th>Fires</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td class="fw">Content → Nurture</td><td>3+ touches same topic</td><td>Enter nurture sequence</td><td>642</td><td><span class="badge badge-green">Active</span></td></tr>
+          <tr><td class="fw">Nurture → Assessment</td><td>Sequence completed</td><td>Offer diagnostic purchase</td><td>183</td><td><span class="badge badge-green">Active</span></td></tr>
+          <tr><td class="fw">Purchase → Results</td><td>Payment confirmed</td><td>Generate + send report</td><td>156</td><td><span class="badge badge-green">Active</span></td></tr>
+          <tr><td class="fw">Results → Cross-sell</td><td>Report consumed</td><td>Suggest complementary product</td><td>89</td><td><span class="badge badge-green">Active</span></td></tr>
+          <tr><td class="fw">B2B Signal Detection</td><td>Enterprise domain + C-suite</td><td>Route to VISTA pipeline</td><td>7</td><td><span class="badge badge-green">Active</span></td></tr>
+          <tr><td class="fw">Council Qualification</td><td>2+ diagnostics completed</td><td>Send Council invitation</td><td>23</td><td><span class="badge badge-green">Active</span></td></tr>
+          <tr><td class="fw">Webinar → Follow-up</td><td>Attended webinar</td><td>Send recording + resources</td><td>115</td><td><span class="badge badge-green">Active</span></td></tr>
+          <tr><td class="fw">Dormant Re-engagement</td><td>No activity 30+ days</td><td>Send re-engagement email</td><td>141</td><td><span class="badge badge-yellow">Testing</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- PAGE: VISTA HANDOFF -->
+<!-- ═══════════════════════════════════════ -->
+<div class="page" id="page-handoff">
+  <div class="page-title">VISTA Handoff</div>
+  <div class="page-sub">B2C contacts showing B2B signals — routed to VISTA pipeline</div>
+  <div class="kpi-row" style="grid-template-columns:repeat(3,1fr);">
+    <div class="kpi"><div class="kpi-label">Total Handoffs</div><div class="kpi-value">7</div></div>
+    <div class="kpi"><div class="kpi-label">Accepted by VISTA</div><div class="kpi-value">5</div></div>
+    <div class="kpi"><div class="kpi-label">Pipeline Value</div><div class="kpi-value">$284K</div></div>
+  </div>
+  <div class="card">
+    <div class="card-h"><h3>Handoff Queue</h3></div>
+    <div class="card-b" style="padding:0;">
+      <table class="dtable">
+        <thead><tr><th>Contact</th><th>Signal</th><th>Detected</th><th>VISTA Status</th><th>Deal Value</th></tr></thead>
+        <tbody>
+          <tr><td class="fw">Dr. Wei Lin — CTO, Fortune 500</td><td>Enterprise domain + team purchase</td><td>Jul 8</td><td><span class="badge badge-green">Accepted</span></td><td>$85K</td></tr>
+          <tr><td class="fw">Sarah Johnson — CHRO, APAC Bank</td><td>C-suite + multiple diagnostics</td><td>Jul 7</td><td><span class="badge badge-green">Accepted</span></td><td>$120K</td></tr>
+          <tr><td class="fw">Hiroshi Yamada — VP, Tokyo</td><td>Board-level content + BRIDGE interest</td><td>Jul 5</td><td><span class="badge badge-blue">In Review</span></td><td>$45K</td></tr>
+          <tr><td class="fw">Raj Patel — CEO, Singapore Tech</td><td>SPARK + enterprise signals</td><td>Jul 3</td><td><span class="badge badge-green">Accepted</span></td><td>$34K</td></tr>
+          <tr><td class="fw">Pending — 3 contacts</td><td>Various B2B signals</td><td>Jul 1-9</td><td><span class="badge badge-yellow">Pending</span></td><td>—</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- PAGE: ANALYTICS -->
+<!-- ═══════════════════════════════════════ -->
+<div class="page" id="page-analytics">
+  <div class="page-title">Analytics</div>
+  <div class="page-sub">Performance metrics across all channels and campaigns</div>
+  <div class="kpi-row">
+    <div class="kpi"><div class="kpi-label">Total Reach (30d)</div><div class="kpi-value">24.8K</div><div class="kpi-delta up">↑ 18%</div></div>
+    <div class="kpi"><div class="kpi-label">Engagement Rate</div><div class="kpi-value">12.4%</div><div class="kpi-delta up">↑ 1.8%</div></div>
+    <div class="kpi"><div class="kpi-label">Conversion Rate</div><div class="kpi-value">2.4%</div><div class="kpi-delta up">↑ 0.3%</div></div>
+    <div class="kpi"><div class="kpi-label">Cost per Touch</div><div class="kpi-value">$0.03</div><div class="kpi-delta up">Efficient</div></div>
+  </div>
+  <div class="grid-2 mb-16">
+    <div class="card">
+      <div class="card-h"><h3>Email Performance (7d)</h3></div>
+      <div class="card-b">
+        <div class="bar-chart">
+          <div class="bar" style="height:60%;background:var(--info)"><span class="bar-value">28%</span><span class="bar-label">Mon</span></div>
+          <div class="bar" style="height:75%;background:var(--info)"><span class="bar-value">35%</span><span class="bar-label">Tue</span></div>
+          <div class="bar" style="height:85%;background:var(--info)"><span class="bar-value">42%</span><span class="bar-label">Wed</span></div>
+          <div class="bar" style="height:70%;background:var(--info)"><span class="bar-value">33%</span><span class="bar-label">Thu</span></div>
+          <div class="bar" style="height:55%;background:var(--info)"><span class="bar-value">26%</span><span class="bar-label">Fri</span></div>
+          <div class="bar" style="height:30%;background:var(--info);opacity:0.5"><span class="bar-value">14%</span><span class="bar-label">Sat</span></div>
+          <div class="bar" style="height:25%;background:var(--info);opacity:0.5"><span class="bar-value">11%</span><span class="bar-label">Sun</span></div>
+        </div>
+        <div class="text-xs text-muted mt-12" style="text-align:center;">Open rate by day of week</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-h"><h3>Journey Conversion Funnel</h3></div>
+      <div class="card-b">
+        <div style="margin-bottom:10px;"><div class="flex-between text-sm" style="margin-bottom:3px;"><span class="fw-700">Awareness → Engagement</span><span class="fw-700">34.7%</span></div><div class="pbar"><div class="pbar-fill" style="width:35%;background:var(--accent)"></div></div></div>
+        <div style="margin-bottom:10px;"><div class="flex-between text-sm" style="margin-bottom:3px;"><span class="fw-700">Engagement → Assessment</span><span class="fw-700">28.5%</span></div><div class="pbar"><div class="pbar-fill" style="width:29%;background:var(--purple)"></div></div></div>
+        <div style="margin-bottom:10px;"><div class="flex-between text-sm" style="margin-bottom:3px;"><span class="fw-700">Assessment → Results</span><span class="fw-700">85.2%</span></div><div class="pbar"><div class="pbar-fill" style="width:85%;background:var(--success)"></div></div></div>
+        <div style="margin-bottom:10px;"><div class="flex-between text-sm" style="margin-bottom:3px;"><span class="fw-700">Results → Cross-sell</span><span class="fw-700">57.1%</span></div><div class="pbar"><div class="pbar-fill" style="width:57%;background:var(--warning)"></div></div></div>
+        <div><div class="flex-between text-sm" style="margin-bottom:3px;"><span class="fw-700">Cross-sell → Council</span><span class="fw-700">25.8%</span></div><div class="pbar"><div class="pbar-fill" style="width:26%;background:var(--gold)"></div></div></div>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-h"><h3>Campaign ROI</h3></div>
+    <div class="card-b" style="padding:0;">
+      <table class="dtable">
+        <thead><tr><th>Campaign</th><th>Reach</th><th>Leads</th><th>Conversions</th><th>Revenue</th><th>ROI</th></tr></thead>
+        <tbody>
+          <tr><td class="fw">BRIDGE Nurture</td><td>4,241</td><td>186</td><td>15</td><td>$127.5K</td><td><span class="badge badge-green">842%</span></td></tr>
+          <tr><td class="fw">PRISM Awareness</td><td>3,892</td><td>142</td><td>8</td><td>$9.6K</td><td><span class="badge badge-green">312%</span></td></tr>
+          <tr><td class="fw">LEAP Cross-sell</td><td>1,247</td><td>89</td><td>12</td><td>$14.4K</td><td><span class="badge badge-green">567%</span></td></tr>
+          <tr><td class="fw">Council Invite</td><td>89</td><td>23</td><td>4</td><td>$48K</td><td><span class="badge badge-green">1,240%</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- PAGE: CAMPAIGNS -->
+<!-- ═══════════════════════════════════════ -->
+<div class="page" id="page-campaigns">
+  <div class="page-title">Campaigns</div>
+  <div class="page-sub">Marketing campaigns tied to products, clusters, and events</div>
+  <div class="page-actions">
+    <button class="btn btn-primary" onclick="openModal('new-campaign')">+ New Campaign</button>
+  </div>
+  <div class="card">
+    <div class="card-b" style="padding:0;">
+      <table class="dtable">
+        <thead><tr><th>Campaign</th><th>Product</th><th>Cluster</th><th>Status</th><th>Assets</th><th>Reach</th><th>Leads</th><th>Owner</th></tr></thead>
+        <tbody>
+          <tr><td class="fw">BRIDGE Launch</td><td>BRIDGE</td><td>A, F</td><td><span class="badge badge-green">Active</span></td><td>12</td><td>4,241</td><td>186</td><td>NEXUS</td></tr>
+          <tr><td class="fw">IMPACT Phase 1A</td><td>IMPACT</td><td>B, C</td><td><span class="badge badge-blue">Building</span></td><td>6</td><td>—</td><td>—</td><td>Echo</td></tr>
+          <tr><td class="fw">SPARK Awareness</td><td>SPARK</td><td>B, F</td><td><span class="badge badge-yellow">Planning</span></td><td>3</td><td>—</td><td>—</td><td>NEXUS</td></tr>
+          <tr><td class="fw">PRISM Nurture</td><td>PRISM</td><td>G</td><td><span class="badge badge-green">Active</span></td><td>8</td><td>3,892</td><td>142</td><td>Echo</td></tr>
+          <tr><td class="fw">Council Q3 Recruitment</td><td>Council</td><td>All</td><td><span class="badge badge-green">Active</span></td><td>4</td><td>89</td><td>23</td><td>Kevin</td></tr>
+          <tr><td class="fw">MOSAIC Cross-Cultural</td><td>MOSAIC</td><td>E</td><td><span class="badge badge-yellow">Planning</span></td><td>2</td><td>—</td><td>—</td><td>Xuemei</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+  </div><!-- /content -->
+</div><!-- /main -->
+</div><!-- /app -->
+
+<!-- ═══ MODALS ═══ -->
+<div class="modal-overlay" id="modal-new-campaign">
+  <div class="modal">
+    <div class="modal-h"><h3>New Campaign</h3><button class="modal-close" onclick="closeModal('new-campaign')">✕</button></div>
+    <div class="modal-b">
+      <div class="form-group"><label class="form-label">Campaign Name</label><input class="form-input" placeholder="e.g., BRIDGE Launch Phase 2"></div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Product</label><select class="form-input"><option>BRIDGE</option><option>IMPACT</option><option>SPARK</option><option>PRISM</option><option>MOSAIC</option><option>FORGE</option><option>LEAP</option><option>QUEST</option><option>COACH</option><option>DRIVE</option></select></div>
+        <div class="form-group"><label class="form-label">Target Cluster</label><select class="form-input" multiple><option>Cluster A: China Executives</option><option>Cluster B: Tech/AI Leaders</option><option>Cluster C: HR/People</option><option>Cluster D: Board Members</option><option>Cluster E: Cross-cultural</option><option>Cluster F: APAC Leaders</option><option>Cluster G: Career Transitions</option></select></div>
+      </div>
+      <div class="form-group"><label class="form-label">Campaign Owner</label><select class="form-input"><option>NEXUS</option><option>Echo</option><option>Carl</option><option>Kevin</option></select></div>
+      <div class="form-group"><label class="form-label">Description</label><textarea class="form-input" rows="3" placeholder="Campaign goals, target audience, key messaging..."></textarea></div>
+    </div>
+    <div class="modal-f"><button class="btn btn-secondary" onclick="closeModal('new-campaign')">Cancel</button><button class="btn btn-primary" onclick="closeModal('new-campaign');showToast('Campaign created')">Create Campaign</button></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-new-content">
+  <div class="modal">
+    <div class="modal-h"><h3>New Content Asset</h3><button class="modal-close" onclick="closeModal('new-content')">✕</button></div>
+    <div class="modal-b">
+      <div class="form-group"><label class="form-label">Title</label><input class="form-input" placeholder="Asset title"></div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Type</label><select class="form-input"><option>Article</option><option>Newsletter</option><option>LinkedIn Post</option><option>Podcast</option><option>YouTube</option><option>Webinar</option><option>Exec Brief</option><option>Landing Page</option></select></div>
+        <div class="form-group"><label class="form-label">Channel</label><select class="form-input"><option>Email</option><option>Website</option><option>LinkedIn</option><option>Ausha</option><option>YouTube</option></select></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Campaign</label><select class="form-input"><option>BRIDGE Launch</option><option>IMPACT Phase 1A</option><option>SPARK Awareness</option><option>PRISM Nurture</option></select></div>
+        <div class="form-group"><label class="form-label">Owner</label><select class="form-input"><option>Echo</option><option>Xuemei</option><option>Carl</option><option>NEXUS</option><option>Maria</option></select></div>
+      </div>
+      <div class="form-group"><label class="form-label">Brief</label><textarea class="form-input" rows="3" placeholder="Content brief, key points, CTA..."></textarea></div>
+    </div>
+    <div class="modal-f"><button class="btn btn-secondary" onclick="closeModal('new-content')">Cancel</button><button class="btn btn-primary" onclick="closeModal('new-content');showToast('Asset created')">Create Asset</button></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-new-event">
+  <div class="modal">
+    <div class="modal-h"><h3>New Event</h3><button class="modal-close" onclick="closeModal('new-event')">✕</button></div>
+    <div class="modal-b">
+      <div class="form-group"><label class="form-label">Event Name</label><input class="form-input" placeholder="e.g., BRIDGE Deep-Dive Webinar"></div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Type</label><select class="form-input"><option>Webinar</option><option>Workshop</option><option>Program</option><option>Event</option></select></div>
+        <div class="form-group"><label class="form-label">Date</label><input class="form-input" type="date"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Capacity</label><input class="form-input" type="number" placeholder="100"></div>
+        <div class="form-group"><label class="form-label">Owner</label><select class="form-input"><option>Carl</option><option>Emily</option></select></div>
+      </div>
+      <div class="form-group"><label class="form-label">Description</label><textarea class="form-input" rows="3" placeholder="Event description, agenda, speakers..."></textarea></div>
+    </div>
+    <div class="modal-f"><button class="btn btn-secondary" onclick="closeModal('new-event')">Cancel</button><button class="btn btn-primary" onclick="closeModal('new-event');showToast('Event created')">Create Event</button></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-new-sequence">
+  <div class="modal">
+    <div class="modal-h"><h3>New Email Sequence</h3><button class="modal-close" onclick="closeModal('new-sequence')">✕</button></div>
+    <div class="modal-b">
+      <div class="form-group"><label class="form-label">Sequence Name</label><input class="form-input" placeholder="e.g., IMPACT Nurture"></div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Type</label><select class="form-input"><option>Welcome</option><option>Nurture</option><option>Launch</option><option>Cross-sell</option><option>Re-engagement</option></select></div>
+        <div class="form-group"><label class="form-label">Target List</label><select class="form-input"><option>Cluster A</option><option>Cluster B</option><option>All Contacts</option><option>Webinar Attendees</option></select></div>
+      </div>
+      <div class="form-group"><label class="form-label">Steps</label><textarea class="form-input" rows="4" placeholder="Step 1: Day 0 - Welcome email&#10;Step 2: Day 3 - Case study&#10;Step 3: Day 7 - Insight piece&#10;Step 4: Day 14 - Offer"></textarea></div>
+    </div>
+    <div class="modal-f"><button class="btn btn-secondary" onclick="closeModal('new-sequence')">Cancel</button><button class="btn btn-primary" onclick="closeModal('new-sequence');showToast('Sequence created')">Create Sequence</button></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-new-list">
+  <div class="modal">
+    <div class="modal-h"><h3>New Mailing List</h3><button class="modal-close" onclick="closeModal('new-list')">✕</button></div>
+    <div class="modal-b">
+      <div class="form-group"><label class="form-label">List Name</label><input class="form-input" placeholder="e.g., FORGE Early Adopters"></div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Type</label><select class="form-input"><option>Cluster</option><option>Event</option><option>Nurture</option><option>Customer</option><option>VIP</option></select></div>
+        <div class="form-group"><label class="form-label">Manager</label><select class="form-input"><option>Maria</option><option>Emily</option><option>Kevin</option></select></div>
+      </div>
+      <div class="form-group"><label class="form-label">Criteria</label><textarea class="form-input" rows="3" placeholder="e.g., Cluster = B AND Diagnostic = QUEST AND Engagement > 3"></textarea></div>
+    </div>
+    <div class="modal-f"><button class="btn btn-secondary" onclick="closeModal('new-list')">Cancel</button><button class="btn btn-primary" onclick="closeModal('new-list');showToast('List created')">Create List</button></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-new-trigger">
+  <div class="modal">
+    <div class="modal-h"><h3>New Trigger</h3><button class="modal-close" onclick="closeModal('new-trigger')">✕</button></div>
+    <div class="modal-b">
+      <div class="form-group"><label class="form-label">Trigger Name</label><input class="form-input" placeholder="e.g., LEAP → PRISM Cross-sell"></div>
+      <div class="form-group"><label class="form-label">Condition</label><textarea class="form-input" rows="2" placeholder="e.g., Completed LEAP AND No PRISM AND Days since > 7"></textarea></div>
+      <div class="form-group"><label class="form-label">Action</label><select class="form-input"><option>Enter nurture sequence</option><option>Send email</option><option>Suggest product</option><option>Route to VISTA</option><option>Send Council invite</option></select></div>
+      <div class="form-group"><label class="form-label">Priority</label><select class="form-input"><option>High</option><option>Medium</option><option>Low</option></select></div>
+    </div>
+    <div class="modal-f"><button class="btn btn-secondary" onclick="closeModal('new-trigger')">Cancel</button><button class="btn btn-primary" onclick="closeModal('new-trigger');showToast('Trigger created')">Create Trigger</button></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-new-journey">
+  <div class="modal">
+    <div class="modal-h"><h3>New B2C Journey</h3><button class="modal-close" onclick="closeModal('new-journey')">✕</button></div>
+    <div class="modal-b">
+      <div class="form-group"><label class="form-label">Journey Name</label><input class="form-input" placeholder="e.g., SPARK → AI Talent System"></div>
+      <div class="form-group"><label class="form-label">Entry Point</label><select class="form-input"><option>Content consumption</option><option>Webinar attendance</option><option>Direct purchase</option><option>Referral</option></select></div>
+      <div class="form-group"><label class="form-label">Stages</label><textarea class="form-input" rows="4" placeholder="Awareness → Engagement → SPARK Diagnostic → Results → AI Talent System → Council"></textarea></div>
+    </div>
+    <div class="modal-f"><button class="btn btn-secondary" onclick="closeModal('new-journey')">Cancel</button><button class="btn btn-primary" onclick="closeModal('new-journey');showToast('Journey created')">Create Journey</button></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-new-template">
+  <div class="modal">
+    <div class="modal-h"><h3>New Template</h3><button class="modal-close" onclick="closeModal('new-template')">✕</button></div>
+    <div class="modal-b">
+      <div class="form-group"><label class="form-label">Template Name</label><input class="form-input" placeholder="e.g., Product Launch Newsletter"></div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Type</label><select class="form-input"><option>Newsletter</option><option>Webinar Promo</option><option>Exec Brief</option><option>LinkedIn Post</option><option>Podcast Notes</option><option>Email Sequence</option><option>Landing Page</option><option>Registration Form</option></select></div>
+        <div class="form-group"><label class="form-label">Channel</label><select class="form-input"><option>Email</option><option>LinkedIn</option><option>Website</option><option>Ausha</option><option>YouTube</option></select></div>
+      </div>
+      <div class="form-group"><label class="form-label">Structure</label><textarea class="form-input" rows="5" placeholder="Template structure, sections, placeholders..."></textarea></div>
+    </div>
+    <div class="modal-f"><button class="btn btn-secondary" onclick="closeModal('new-template')">Cancel</button><button class="btn btn-primary" onclick="closeModal('new-template');showToast('Template created')">Create Template</button></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-new-repurpose">
+  <div class="modal">
+    <div class="modal-h"><h3>New Repurpose Map</h3><button class="modal-close" onclick="closeModal('new-repurpose')">✕</button></div>
+    <div class="modal-b">
+      <div class="form-group"><label class="form-label">Source Asset</label><select class="form-input"><option>Webinar: BRIDGE Dynamics</option><option>Research: LEAP APAC Norms</option><option>Podcast Ep.3: AI in CHRO</option><option>Keynote: SPARK AI Readiness</option></select></div>
+      <div class="form-group"><label class="form-label">Derivatives to Generate</label><textarea class="form-input" rows="4" placeholder="✓ Summary Article&#10;✓ LinkedIn Post ×3&#10;✓ Newsletter Excerpt&#10;☐ Podcast Episode&#10;☐ YouTube Clips ×2&#10;☐ Executive Brief"></textarea></div>
+    </div>
+    <div class="modal-f"><button class="btn btn-secondary" onclick="closeModal('new-repurpose')">Cancel</button><button class="btn btn-gold" onclick="closeModal('new-repurpose');showToast('Repurpose map created')">Create Map</button></div>
+  </div>
+</div>
+
+<!-- ═══ TOAST ═══ -->
+<div class="toast" id="toast"></div>
+
+<!-- ═══ JS ═══ -->
+<script>
+function navigateTo(page) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('page-' + page).classList.add('active');
+  document.querySelector('.nav-item[data-page="' + page + '"]').classList.add('active');
+}
+
+document.querySelectorAll('.nav-item').forEach(item => {
+  item.addEventListener('click', () => {
+    const page = item.getAttribute('data-page');
+    if (page) navigateTo(page);
+  });
+});
+
+function openModal(id) {
+  document.getElementById('modal-' + id).classList.add('open');
+}
+
+function closeModal(id) {
+  document.getElementById('modal-' + id).classList.remove('open');
+}
+
+document.querySelectorAll('.modal-overlay').forEach(overlay => {
+  overlay.addEventListener('click', (e) => {
+    if (e.target === overlay) overlay.classList.remove('open');
+  });
+});
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = '✓ ' + msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// Tab click
+document.querySelectorAll('.tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    tab.parentElement.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+  });
+});
+</script>
+</body>
+</html>
