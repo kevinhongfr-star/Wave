@@ -222,7 +222,7 @@ WAVE is not sold as a SaaS product. It is LYC Partners' internal commercial engi
 - [ ] 2,000+ contacts, 50+ B2B signals/year
 - [ ] Council: 30+ members
 - [ ] WAVE-attributed revenue: $900K+
-- [ ] Platform architecture documented for potential licensing to other professional services firms
+- [ ] Architecture documented as a repeatable internal playbook for future team scaling
 
 ### 3.3 Key Performance Indicators
 
@@ -300,9 +300,9 @@ Within that:
 - **Professional services** remain underserved — enterprise tools (HubSpot, Marketo) are too generic; SMB tools lack sophistication
 - **Diagnostic-driven marketing** is a blue ocean — no platform connects assessment results to automated content journeys
 
-**Our wedge:** Start as internal tool → prove ROI → document architecture → license to other professional services firms (consulting, executive search, coaching, advisory).
+**Our wedge:** The marketing automation market is $112B and growing at 16.4% CAGR. Most professional services firms spend $10K-$15K/year on generic tools (HubSpot, Marketo) that require 60%+ of their time on tool management rather than actual marketing. We built our own — purpose-built, AI-native, integrated with our own diagnostic products — at 63% lower cost. The platform makes LYC operate like a 50-person marketing team with 9 people. That operational leverage is the competitive advantage.
 
-**Serviceable addressable market (SAM):** 50,000 professional services firms in US/EU with 10-200 employees = $2.5B opportunity at $50K/year/platform.
+**Why this matters:** The broader market validates the approach — AI-powered marketing is the fastest-growing segment (23.7% CAGR for AI content generation). Firms spending $10K+/year on generic tools with no diagnostic integration and no B2B signal detection are leaving money on the table. We are not leaving money on the table.
 
 ### Slide 5: Product
 
@@ -397,16 +397,16 @@ Within that:
 
 ### Slide 10: The Ask
 
-**We are not raising capital for WAVE.**
+**WAVE is internal infrastructure. Not for sale. Not SaaS.**
 
-WAVE is self-funded infrastructure. Development cost: ~$5K (DeepSeek API + tools). Running cost: ~$330/month.
+WAVE is self-funded internal infrastructure. Development cost: ~$5K (DeepSeek API + tools). Running cost: ~$330/month. It is not a product. It is our commercial engine.
 
 **What we're building toward:**
 1. **Prove the model:** WAVE drives $1M+ in attributable revenue within 18 months
-2. **Document the playbook:** Architecture, specs, AI orchestration patterns, GTM logic
-3. **License the architecture:** Other professional services firms can adopt the WAVE + VISTA + DEX AI stack
+2. **Document the playbook:** Architecture, specs, AI orchestration patterns — so any new team member or future agent can operate it
+3. **Scale the model:** Apply the same AI-augmented playbook to new revenue streams, new geographies, new product lines
 
-**If you're interested in the licensing opportunity** (estimated $50K-$200K/year per firm, targeting 100 firms = $5M-$20M ARR potential), let's talk after we hit $1M in proven revenue.
+**If you're interested in how a 9-person team runs a $1M+ revenue engine on $330/month of infrastructure**, let's talk after we hit $1M in proven revenue. The moat isn't the software — it's the integration of diagnostics, content, AI, and domain expertise that no off-the-shelf tool can replicate.
 
 ---
 
