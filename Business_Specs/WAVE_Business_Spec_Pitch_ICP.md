@@ -19,13 +19,13 @@
 
 ## 1. Executive Summary
 
-**LYC Partners** is a premium leadership advisory firm building an AI-native commercial engine to replace the fragmented toolstack that every consulting firm cobbles together. **WAVE** is the inbound marketing operations pillar of that engine.
+**LYC Partners** is a premium leadership advisory firm building an AI-native marketing engine to replace the fragmented toolstack that every consulting firm cobbles together. **WAVE** is the inbound marketing operations pillar of that engine.
 
 The problem is universal: leadership advisory firms spend 60% of their marketing effort on coordination — moving content between tools, chasing approvals, manually routing leads, guessing what to publish next. The result is slow cycles, inconsistent messaging, and a sales funnel that depends on heroic individual effort rather than system intelligence.
 
 WAVE solves this by unifying **content planning → template creation → multi-channel distribution → automated customer journeys → B2B signal detection → revenue intelligence** into a single AI-orchestrated platform. One diagnostic insight becomes 10+ content touchpoints. One B2C assessment buyer is automatically nurtured toward Council membership. One B2B signal triggers an outbound route to the BD team — with full context.
 
-**WAVE is not a SaaS product for sale.** It is LYC Partners' proprietary commercial infrastructure — a competitive moat that makes the firm operate with the efficiency of a 50-person marketing team while running a 9-person crew.
+**WAVE is not a SaaS product for sale.** It is LYC Partners' proprietary marketing infrastructure — a competitive moat that makes the firm operate with the efficiency of a 50-person marketing team while running a 9-person crew.
 
 The broader opportunity: if WAVE proves out, the architecture (WAVE + VISTA + DEX AI) becomes a replicable playbook for professional services firms worldwide — a $492B addressable market by 2035.
 
@@ -153,7 +153,7 @@ WAVE does not operate in isolation. It is one pillar of LYC's three-platform arc
 
 ### 3.1 Revenue Model
 
-WAVE is not sold as a SaaS product. It is LYC Partners' internal commercial engine that drives revenue through three channels:
+WAVE is not sold as a SaaS product. It is LYC Partners' internal marketing engine that drives revenue through three channels:
 
 ```
                     WAVE-DRIVEN REVENUE ARCHITECTURE
@@ -263,7 +263,7 @@ WAVE is not sold as a SaaS product. It is LYC Partners' internal commercial engi
 
 > **LYC Intelligence**
 > "Know where you stand. Know where to go."
-> AI-Native Commercial Infrastructure for Professional Services
+> AI-Native Marketing Infrastructure for Professional Services
 
 ### Slide 2: The Problem
 
@@ -281,7 +281,7 @@ WAVE is not sold as a SaaS product. It is LYC Partners' internal commercial engi
 
 ### Slide 3: The Solution
 
-**WAVE + VISTA + DEX AI: One AI-native commercial engine.**
+**WAVE + VISTA + DEX AI: One AI-native marketing engine.**
 
 - **WAVE** (Inbound): Content → Distribution → Journeys → Intelligence
 - **VISTA** (Outbound): Pipeline → Outreach → Account Management → Revenue
@@ -399,7 +399,7 @@ Within that:
 
 **WAVE is internal infrastructure. Not for sale. Not SaaS.**
 
-WAVE is self-funded internal infrastructure. Development cost: ~$5K (DeepSeek API + tools). Running cost: ~$330/month. It is not a product. It is our commercial engine.
+WAVE is self-funded internal infrastructure. Development cost: ~$5K (DeepSeek API + tools). Running cost: ~$330/month. It is not a product. It is our marketing engine.
 
 **What we're building toward:**
 1. **Prove the model:** WAVE drives $1M+ in attributable revenue within 18 months
