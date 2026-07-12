@@ -11,14 +11,14 @@
 
 ## 1. Purpose
 
-The B2C Journey Engine is WAVE's automated customer lifecycle layer. It answers:
+The B2C Journey Engine is WAVE's automated client lifecycle layer. It answers:
 1. **"What happens after someone enters our ecosystem?"** — Automated nurture from first touch to Council membership
 2. **"How do we move people between products?"** — Diagnostic-triggered cross-sell (LEAP → PRISM → Council)
 3. **"When does a B2C buyer become a B2B prospect?"** — Signal detection and routing to VISTA
 4. **"Where are people getting stuck?"** — Funnel analytics, drop-off detection, optimization
 5. **"Can I see everyone's journey at once?"** — Lifecycle tracking, cohort analysis, health monitoring
 
-It must feel like **HubSpot's workflow builder + UserFlow's journey mapping + a lightweight customer success platform** — not a flowchart tool.
+It must feel like **HubSpot's workflow builder + UserFlow's journey mapping + a lightweight client success platform** — not a flowchart tool.
 
 **Current state (what exists today):**
 - Static table with 5 hardcoded rows (name, enrolled, conversion, steps)
@@ -317,7 +317,7 @@ Contact Data Update / Assessment Submission / Activity Event
 | Signals detected (week/month) | Total signals by type |
 | Conversion to VISTA lead | % of signals that become qualified leads |
 | Time from signal to lead creation | Speed of detection pipeline |
-| B2C → B2B conversion rate | % of B2C contacts that generate B2B signal |
+| B2C → B2B progression rate | % of B2C contacts that generate B2B signal |
 | Revenue from B2B-routed leads | Track deal value from WAVE-sourced leads |
 | Signal accuracy | % of VISTA leads from WAVE that progress to opportunity |
 
@@ -616,7 +616,7 @@ Contact completes LEAP assessment
 │  │  🔄 Cross-sell: LEAP → PRISM suggested to 8 contacts — 1h ago        │ │
 │  └─────────────────────────────────────────────────────────────────────────┘ │
 │                                                                              │
-│  [INFRA-103] Next Milestone: "Onboard 500 users by Jul 31"                 │
+│  [INFRA-103] Next Milestone: "Onboard 500 professionals by Jul 31"                 │
 │              342/500 (68%) → 3 journeys contributing → [→ View Progress]    │
 └──────────────────────────────────────────────────────────────────────────────┘
 ```
@@ -1142,7 +1142,7 @@ model: "deepseek-chat"
 temperature: 0.3
 max_tokens: 1000
 system_prompt: |
-  You are a customer journey optimization expert for LYC Partners.
+  You are a client journey optimization expert for LYC Partners.
   You analyze journey performance data and provide actionable recommendations.
   Focus on: reducing drop-off, improving completion rates, optimizing timing,
   and maximizing cross-sell conversion.
@@ -1338,7 +1338,7 @@ system_prompt: |
 | JOUR-070 | AI B2B Signal Analyst persona (confidence scoring + routing) | P2 | 4h | JOUR-037, DeepSeek |
 | JOUR-071 | AI insights display: inline on canvas nodes (recommendation badges) | P2 | 4h | JOUR-068 |
 | JOUR-072 | A/B path testing (split node with tracked variants + significance) | P2 | 5h | JOUR-060 |
-| JOUR-073 | Customer lifecycle timeline (per contact: all journeys, all steps, all outcomes) | P2 | 5h | JOUR-003 |
+| JOUR-073 | Client lifecycle timeline (per contact: all journeys, all steps, all outcomes) | P2 | 5h | JOUR-003 |
 | JOUR-074 | Journey comparison view (side-by-side: two journeys on all metrics) | P2 | 4h | JOUR-045 |
 | JOUR-075 | Journey test mode (simulate with test contact, step through nodes) | P2 | 4h | JOUR-023 |
 | JOUR-076 | Canvas responsive: tablet (collapsed panels, touch drag) | P2 | 3h | JOUR-006 |
@@ -1349,7 +1349,7 @@ system_prompt: |
 | JOUR-081 | Layout presets (INFRA-105: "Builder Mode", "Analytics Mode", "Monitoring Mode") | P2 | 3h | INFRA-105 |
 | JOUR-082 | Live presence on canvas (INFRA-110: "Echo is editing this journey") | P2 | 3h | INFRA-110 |
 | JOUR-083 | Cross-page drag: contact from journey → Distribution sequence | P2 | 4h | INFRA-107 |
-| JOUR-084 | Milestone tracker integration (INFRA-103: "Onboard 500 users" → 3 journeys contributing) | P2 | 3h | INFRA-103 |
+| JOUR-084 | Milestone tracker integration (INFRA-103: "Onboard 500 professionals" → 3 journeys contributing) | P2 | 3h | INFRA-103 |
 | JOUR-085 | Canvas node resizing (drag corner to resize node card) | P2 | 2h | JOUR-006 |
 | JOUR-086 | Canvas panel resize (drag edge between canvas and detail panel) | P2 | 2h | INFRA-100 |
 | JOUR-087 | Background job: clean completed instances (archive > 90 days) | P2 | 2h | JOUR-003 |
@@ -1431,7 +1431,7 @@ system_prompt: |
 - [ ] AI B2B Signal Analyst: confidence scoring + route/monitor/dismiss
 - [ ] AI insights displayed as badges on canvas nodes
 - [ ] A/B path testing: split node with tracked variants, significance calculation
-- [ ] Customer lifecycle timeline: per-contact journey history
+- [ ] Client lifecycle timeline: per-contact journey history
 - [ ] Journey comparison view: side-by-side metrics
 - [ ] Journey test mode: simulate with test contact
 - [ ] Responsive: tablet (collapsed panels, touch) + mobile (list-only)
@@ -1524,7 +1524,7 @@ B2CJourneyEnginePage
 ├── CommandPalette (Cmd+K — journey-specific)
 │   ├── Search: journeys, nodes, contacts
 │   └── Actions: New Journey, Activate All, Pause All, Export Analytics
-└── MilestoneTracker (INFRA-103: "Onboard 500 users → 3 journeys contributing")
+└── MilestoneTracker (INFRA-103: "Onboard 500 professionals → 3 journeys contributing")
 ```
 
 ### 10.2 Key Component Interfaces
@@ -1720,7 +1720,7 @@ interface LiveActivityFeedProps {
 | Stuck Contact Detection | JOUR-065 | Alert when wait exceeds expected |
 | AI Optimization | JOUR-068, JOUR-069, JOUR-070, JOUR-071 | 3 AI personas + inline insight display |
 | A/B Path Testing | JOUR-072 | Split node with tracked variants |
-| Customer Lifecycle | JOUR-073 | Per-contact full journey history |
+| Client Lifecycle | JOUR-073 | Per-contact full journey history |
 | Journey Comparison | JOUR-074 | Side-by-side analytics |
 | Test Mode | JOUR-075 | Simulate journey with test contact |
 | Layout Freedom (INFRA) | JOUR-078 through JOUR-086 | Split view, focus mode, memory, presets, presence, resize |

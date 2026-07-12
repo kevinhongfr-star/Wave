@@ -9,7 +9,7 @@
 
 ## 1. Purpose
 
-The Dashboard is the single entry point for all WAVE users. It answers three questions in under 5 seconds:
+The Dashboard is the single entry point for all WAVE operators. It answers three questions in under 5 seconds:
 1. **What's happening right now?** (real-time status)
 2. **What needs my attention?** (action items, blockers, overdue)
 3. **What's the AI saying?** (executive brief with recommendations)

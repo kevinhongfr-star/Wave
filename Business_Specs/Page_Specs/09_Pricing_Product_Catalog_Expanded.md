@@ -16,7 +16,7 @@ The Pricing & Product Catalog is WAVE's commercial backbone. Every other module 
 
 - **Content Calendar** → tags content by product/tier it promotes
 - **Template Library** → pricing page templates, proposal templates with tier-specific pricing
-- **Distribution Engine** → tier-specific messaging (free content vs paid workshop promo)
+- **Distribution Engine** → tier-specific messaging (Executive Introduction content vs paid workshop promo)
 - **B2C Journey Engine** → cross-sell rules reference products, bundles, and pricing tiers
 - **Content Repurposing** → content that promotes specific tiers
 - **Events** → tiered pricing (early-bird, regular, VIP, founding member)
@@ -70,7 +70,7 @@ It answers 5 questions:
 | `slug` | TEXT | yes | URL-safe identifier (e.g., "prism-diagnostic") |
 | `description` | TEXT | yes | Full description (block-based, editable) |
 | `short_description` | TEXT | no | One-liner for cards/lists |
-| `tier` | ENUM | yes | `free`, `low_ticket`, `mid_ticket`, `high_ticket`, `search`, `council`, `platform` |
+| `tier` | ENUM | yes | `executive_intro`, `low_ticket`, `mid_ticket`, `high_ticket`, `search`, `council`, `platform` |
 | `category` | ENUM | yes | `diagnostic`, `coaching`, `advisory`, `workshop`, `content`, `search`, `membership`, `platform`, `bundle`, `mapping` |
 | `base_price_cny` | INTEGER | yes | Base price in CNY (0 for free) |
 | `price_range_min` | INTEGER | no | Minimum price (for variable pricing) |
@@ -142,9 +142,9 @@ It answers 5 questions:
 33. Mapping-to-Search Pipeline — ¥15K mapping credited to search fee
 
 **Tier 6 — THE COUNCIL:**
-34. Council Individual Member — ¥12,000/year (60 max)
-35. Council Corporate Member — ¥30,000/year (10 max)
-36. Council PE Partner Member — ¥50,000/year (5 max)
+34. Council Individual Member — ¥3,800/year (60 max)
+35. Council Corporate Member — ¥12,000/year (10 max)
+36. Council PE Partner Member — ¥25,000/year (5 max)
 
 **Tier 7 — PLATFORM (DEX AI):**
 37. DEX AI Starter — ¥500 (10 credits)
@@ -163,7 +163,7 @@ It answers 5 questions:
 | `founding_client` | First 3 buyers of a diagnostic product | 40-50% off | "Founding client rate" | Product has `never_discount=true` |
 | `annual_commitment` | 12-month retainer commitment | 15-20% off monthly | "Annual partnership rate" | — |
 | `early_bird` | Event registration 14+ days before | 15% off | "Early-bird pricing" | — |
-| `council_founding` | Council founding member (first 30) | 20% off first year | "Founding member rate" | Council at capacity |
+| `council_founding` | Council founding member (first 20) | ¥2,800 flat | "Founding member rate" | Council at capacity |
 | `multi_product` | 2+ products in single purchase | 20-30% off total | "Program rate" | — |
 | `bundle_discount` | Pre-defined bundle purchased | Per-bundle discount | "Bundle rate" | — |
 
@@ -581,7 +581,7 @@ CREATE TABLE products (
     slug TEXT UNIQUE NOT NULL,
     description TEXT,
     short_description TEXT,
-    tier TEXT NOT NULL CHECK (tier IN ('free','low_ticket','mid_ticket','high_ticket','search','council','platform')),
+    tier TEXT NOT NULL CHECK (tier IN ('executive_intro','low_ticket','mid_ticket','high_ticket','search','council','platform')),
     category TEXT NOT NULL CHECK (category IN ('diagnostic','coaching','advisory','workshop','content','search','membership','platform','bundle','mapping')),
     base_price_cny INTEGER NOT NULL DEFAULT 0,
     price_range_min INTEGER,

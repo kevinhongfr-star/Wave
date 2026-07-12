@@ -56,9 +56,10 @@ It must feel like **Notion's dashboards + Mixpanel's analytics + Stripe's revenu
 | Agent monitoring | Basic status | Full: status, action log, success rate, error tracking |
 | Real-time updates | None | Supabase Realtime across all dashboards |
 | Market intelligence | None | External signal ingestion (industry news, competitor moves) |
+| Cross-platform metrics | None | WAVE → DEX AI → VISTA referral tracking, progression rates, client lifetime value |
 | Custom dashboards | None | Drag-and-drop widget builder |
 | Data export | None | CSV/PDF export for all reports |
-| Alerts & thresholds | None | Configurable alerts (revenue target missed, conversion drop, etc.) |
+| Alerts & thresholds | None | Configurable alerts (revenue target missed, progression drop, etc.) |
 
 ---
 
@@ -71,7 +72,7 @@ It must feel like **Notion's dashboards + Mixpanel's analytics + Stripe's revenu
 | FR-1 | Content performance dashboard: views, engagement, conversion by channel | P0 | Source: content_assets + distribution_logs |
 | FR-2 | Revenue dashboard: by tier, product, bundle, cross-sell attribution | P0 | Source: revenue_records (Module 9) |
 | FR-3 | Event analytics: revenue, attendance, lead quality, conversion | P0 | Source: events + event_registrations (Module 7) |
-| FR-4 | Journey conversion dashboard: step-by-step, drop-off, cross-sell | P0 | Source: journey_steps + journey_logs (Page 5) |
+| FR-4 | Journey progression dashboard: step-by-step, drop-off, cross-sell | P0 | Source: journey_steps + journey_logs (Page 5) |
 | FR-5 | Campaign ROI: cost vs revenue, channel breakdown | P0 | Source: campaigns + revenue_records |
 | FR-6 | Repurposing ROI: multiplication ratio, cost per derivative | P1 | Source: repurposing_maps + derivative_assets (Page 6) |
 | FR-7 | Email metrics: open rate, click rate, conversion by sequence | P1 | Source: email_campaigns + email_events |
@@ -83,11 +84,14 @@ It must feel like **Notion's dashboards + Mixpanel's analytics + Stripe's revenu
 | FR-13 | Real-time updates: Supabase Realtime on all dashboards | P0 | No manual refresh |
 | FR-14 | Custom dashboard builder: drag-and-drop widgets | P2 | User-configurable layout |
 | FR-15 | Data export: CSV/PDF for all reports | P1 | |
-| FR-16 | Alerts & thresholds: configurable notifications | P1 | Revenue target, conversion drop, etc. |
+| FR-16 | Alerts & thresholds: configurable notifications | P1 | Revenue target, progression drop, etc. |
 | FR-17 | Market intelligence feed: external signals | P2 | News, competitor moves, industry trends |
 | FR-18 | Funnel analytics: inbound funnel visualization | P1 | Content → lead → registration → purchase → cross-sell |
 | FR-19 | Cohort analysis: track groups over time | P2 | By registration month, event, product |
 | FR-20 | Benchmarking: compare current vs previous period | P1 | WoW, MoM, QoQ |
+| FR-21 | Cross-platform referral tracking: Wave content → DEX AI sign-ups → Vista progression | P0 | Track DEX AI referral rate from Wave content |
+| FR-22 | Content-to-workshop progression rate: content views → workshop registrations → attendance | P0 | Bridge between Module 2 and Module 7 |
+| FR-23 | Client lifetime value tracking: total revenue per professional across all platforms | P1 | Cross-app revenue attribution |
 | FR-21 | Attribution tracking: which content/campaign drove revenue | P1 | Multi-touch attribution |
 | FR-22 | KPI scorecards: per-role KPI views | P1 | Kevin: revenue, Echo: content, Carl: events |
 | FR-23 | Anomaly detection: flag unusual patterns | P2 | AI-driven |
@@ -123,7 +127,7 @@ It must feel like **Notion's dashboards + Mixpanel's analytics + Stripe's revenu
 | By validation | Revenue from validated vs unvalidated products | products.requires_proof + validation data |
 | By channel | Which channel drove the sale | revenue_records.attribution_channel |
 | By time | Daily, weekly, monthly, quarterly | revenue_records.sale_date |
-| By customer | Revenue per contact/company | revenue_records.contact_id / company_id |
+| By client | Revenue per contact/company | revenue_records.contact_id / company_id |
 
 **Key revenue metrics:**
 
@@ -423,7 +427,7 @@ It must feel like **Notion's dashboards + Mixpanel's analytics + Stripe's revenu
 │  REVENUE BY PRODUCT (top 10)                                                 │
 │  ┌─────────────────────────────────────────────────────────────────────┐   │
 │  │  Workshop (half-day)     │ ¥24,000 │ 4 sold │ ✅ Validated         │   │
-│  │  Council Individual      │ ¥12,000 │ 1 sold │ ✅ Validated         │   │
+│  │  Council Individual      │ ¥3,800 │ 1 sold │ ✅ Validated         │   │
 │  │  PRISM Diagnostic        │ ¥15,000 │ 1 sold │ ✅ Validated         │   │
 │  │  Workshop (online 2-3h)  │ ¥ 5,100 │ 1 sold │ ⚠️ Testing          │   │
 │  │  BRIDGE Diagnostic       │ ¥ 0     │ 0 sold │ ⚠️ 5 offers, 0 sales │   │
@@ -482,7 +486,7 @@ It must feel like **Notion's dashboards + Mixpanel's analytics + Stripe's revenu
 │  Registered → Attended:45%  (target: 50%+) ⚠️ (improve reminders)          │
 │  Attended → Purchased: 15%  (target: 10%+) ✅                              │
 │  Purchased → Cross-sold: 28% (target: 20%+) ✅                             │
-│  Overall: Content → Customer: 0.011%                                        │
+│  Overall: Content → Client: 0.011%                                        │
 │                                                                              │
 │  BOTTLENECK: Registered → Attended (45%, below 50% target)                  │
 │  AI SUGGESTION: Add 1-hour reminder (currently only 7d, 3d, 1d, 1h)         │
@@ -505,7 +509,7 @@ It must feel like **Notion's dashboards + Mixpanel's analytics + Stripe's revenu
 | `snapshot_date` | DATE | yes | Date of snapshot |
 | `snapshot_type` | ENUM | yes | `daily`, `weekly`, `monthly` |
 | `total_revenue_cny` | INTEGER | no | Period revenue |
-| `revenue_by_tier` | JSONB | no | `{free: X, low: Y, mid: Z, ...}` |
+| `revenue_by_tier` | JSONB | no | `{executive_intro: X, low: Y, mid: Z, ...}` |
 | `revenue_by_product` | JSONB | no | `{product_id: revenue, ...}` |
 | `total_leads` | INTEGER | no | New leads in period |
 | `total_registrations` | INTEGER | no | New registrations |
@@ -621,6 +625,22 @@ It must feel like **Notion's dashboards + Mixpanel's analytics + Stripe's revenu
 | `published_at` | TIMESTAMPTZ | no | When signal was published |
 | `created_at` | TIMESTAMPTZ | auto | |
 
+
+**Table: `cross_platform_events`**
+
+| Column | Type | Required | Description |
+|--------|------|----------|-------------|
+| `id` | UUID | auto | Primary key |
+| `source_app` | TEXT | yes | `WAVE`, `DEX_AI`, `VISTA` |
+| `event_type` | TEXT | yes | e.g. `dex_ai_signup`, `dex_ai_assessment`, `dex_ai_credit_purchase`, `workshop_registration`, `advisory_inquiry` |
+| `contact_id` | UUID | yes | FK to contacts table |
+| `referral_source` | TEXT | no | Which WAVE content/campaign drove this event |
+| `content_id` | UUID | no | Specific WAVE content that generated the referral |
+| `event_data` | JSONB | no | Event-specific payload |
+| `b2b_readiness_delta` | FLOAT | no | Change in B2B readiness score from this event |
+| `processed` | BOOLEAN | no | Whether WAVE has processed this event |
+| `created_at` | TIMESTAMPTZ | auto | |
+
 ### 5.2 Supabase Views
 
 **View: `revenue_summary`**
@@ -688,7 +708,7 @@ GROUP BY month;
 | GET | `/api/analytics/revenue` | Revenue breakdown (tier, product, bundle, time) | Required |
 | GET | `/api/analytics/content` | Content performance (views, engagement, conversion) | Required |
 | GET | `/api/analytics/events` | Event analytics (revenue, attendance, leads) | Required |
-| GET | `/api/analytics/journeys` | Journey conversion analytics | Required |
+| GET | `/api/analytics/journeys` | Journey progression analytics | Required |
 | GET | `/api/analytics/campaigns` | Campaign ROI data | Required |
 | GET | `/api/analytics/funnel` | Inbound funnel metrics | Required |
 | GET | `/api/analytics/pricing-validation` | Pricing validation status per product | Required |
@@ -843,8 +863,8 @@ DATA SOURCES (read from all modules):
 **Churn Risk Detector**
 - Model: `deepseek-flash` (temperature 0.3)
 - Frequency: Weekly
-- Input: Customer activity, engagement data, time since last interaction
-- Output: At-risk customers, recommended interventions
+- Input: Client activity, engagement data, time since last interaction
+- Output: At-risk clients, recommended interventions
 - Example: "3 Council members haven't engaged in 60+ days. Recommend: personal check-in from Kevin + invite to next exclusive event."
 
 ### 8.2 AI Report Templates
@@ -917,7 +937,7 @@ DATA SOURCES (read from all modules):
 | ANA-019 | Cross-sell attribution tracking (which rule drove revenue) | 3h | P1 | ANA-015 |
 | ANA-020 | Discount depth analysis (how much discount given, by rule) | 2h | P1 | ANA-015 |
 | ANA-021 | Revenue by phase (which phase generated what) | 2h | P1 | ANA-015 |
-| ANA-022 | Revenue by customer (top customers, LTV) | 3h | P1 | ANA-015 |
+| ANA-022 | Revenue by client (top clients, LTV) | 3h | P1 | ANA-015 |
 | ANA-023 | Revenue forecasting (AI-driven projection) | 4h | P2 | ANA-015 |
 
 ### 10.4 Pricing Validation (ANA-024 to ANA-028)
@@ -959,7 +979,7 @@ DATA SOURCES (read from all modules):
 
 | ID | Ticket | Effort | Priority | Dependencies |
 |----|--------|--------|----------|-------------|
-| ANA-044 | Journey conversion dashboard UI (step-by-step) | 5h | P0 | ANA-007 |
+| ANA-044 | Journey progression dashboard UI (step-by-step) | 5h | P0 | ANA-007 |
 | ANA-045 | Funnel visualization (content → lead → registration → purchase) | 4h | P0 | ANA-044 |
 | ANA-046 | Drop-off analysis (where do leads leave?) | 3h | P1 | ANA-044 |
 | ANA-047 | Cross-sell conversion tracking (by rule) | 3h | P1 | ANA-044 |
@@ -1059,6 +1079,13 @@ DATA SOURCES (read from all modules):
 |----|--------|--------|----------|-------------|
 | ANA-097 | Analytics integration with Dashboard (Page 1 KPI widgets) | 3h | P1 | ANA-009, DASH-020 |
 | ANA-098 | Analytics data feed to all module dashboards | 3h | P1 | ANA-007 |
+| ANA-099 | Cross-platform event ingestion: receive events from DEX AI and VISTA via cross_platform_events table | P0 | 6h | INFRA-100 |
+| ANA-100 | DEX AI referral rate dashboard: track how many DEX AI sign-ups originated from WAVE content | P0 | 4h | ANA-099 |
+| ANA-101 | Content-to-workshop progression rate: content views → workshop registrations → attendance | P0 | 4h | ANA-099 |
+| ANA-102 | Client lifetime value (LTV) tracking: total revenue per professional across all platforms | P1 | 6h | ANA-100 |
+| ANA-103 | Cross-platform funnel visualization: WAVE content → DEX AI engagement → VISTA progression → Council | P1 | 5h | ANA-101 |
+| ANA-104 | B2B readiness score aggregation: combine WAVE engagement + DEX AI usage + VISTA signals | P1 | 5h | ANA-099 |
+| ANA-105 | Revenue target tracker: real-time progress against Phase targets (Wedge/Prove/Scale/Premium) | P1 | 3h | ANA-002 |
 
 ---
 

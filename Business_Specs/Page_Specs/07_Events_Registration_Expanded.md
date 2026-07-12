@@ -46,7 +46,7 @@ It must feel like **Calendly's booking flow + Eventbrite's registration + Notion
 | Pricing | None | Tiered: early-bird, regular, VIP, founding member, multi-seat — from product catalog |
 | Payments | Stripe USD | Stripe CNY + WeChat Pay + invoice generation + refund handling |
 | Capacity | None | Real-time seats tracking, waitlist, sold-out display, "X/Y spots filled" |
-| Discounts | None | Integrated with Module 9 discount engine: early-bird 15%, founding 40-50%, Council founding 20% |
+| Discounts | None | Integrated with Module 9 discount engine: early-bird 15%, founding 40-50%, Council founding ¥2,800 |
 | Reminders | Single email | Multi-channel sequence: email + Feishu + SMS, with countdown (7d, 3d, 1d, 1h) |
 | Lead scoring | Basic | Auto-score from registration data: company size, role, source, product history |
 | B2B signals | None | Detect: PE affiliation, C-suite title, multi-registrant from same company |
@@ -105,7 +105,7 @@ It must feel like **Calendly's booking flow + Eventbrite's registration + Notion
 | Webinar | 45-60 min | 50-500 | Free or low-ticket | Platform link, recording toggle, Q&A |
 | Council Meeting | 2-3h | 60 (Individual), 10 (Corporate), 5 (PE) | Membership (annual) | Tier capacity, agenda, Chatham House Rule |
 | Diagnostic Presentation | 60-90 min | 5-20 | Included in diagnostic | Presenter, findings deck, follow-up actions |
-| Networking | 2-3h | 20-80 | Free (members) or tiered | Venue, dress code, matching preferences |
+| Networking | 2-3h | 20-80 | Complimentary (members) or tiered | Venue, dress code, matching preferences |
 | Masterclass | 3-4h / multi-session | 15-30 | Premium (high-ticket) | Instructor, curriculum, prerequisites |
 | Assessment Session | 60-120 min | 1-10 | Per-seat (METRIX) | Assessment type, facilitator, debrief |
 | Custom | Any | Any | Any | Fully configurable |
@@ -119,9 +119,9 @@ It must feel like **Calendly's booking flow + Eventbrite's registration + Notion
 | Workshop (online 2-3h) | Workshop | ¥3,000 | ¥2,550 | ¥4,500 | ¥1,500-1,800 |
 | Workshop (half-day) | Workshop | ¥6,000 | ¥5,100 | ¥9,000 | ¥3,000-3,600 |
 | Monthly Webinar | Webinar | ¥0 (free) | N/A | N/A | N/A |
-| Council Annual (Individual) | Council Meeting | ¥12,000/yr | N/A | N/A | ¥9,600 (founding 20%) |
-| Council Annual (Corporate) | Council Meeting | ¥30,000/yr | N/A | N/A | ¥24,000 (founding 20%) |
-| Council Annual (PE Partner) | Council Meeting | ¥50,000/yr | N/A | N/A | After founding: never discount |
+| Council Annual (Individual) | Council Meeting | ¥3,800/yr | N/A | N/A | ¥2,800 (founding) |
+| Council Annual (Corporate) | Council Meeting | ¥12,000/yr | N/A | N/A | Founding rate applies |
+| Council Annual (PE Partner) | Council Meeting | ¥25,000/yr | N/A | N/A | After founding: never discount |
 | METRIX Assessment | Assessment | ¥200-500 | ¥170-425 | N/A | N/A |
 | Masterclass (single) | Masterclass | ¥5,000-8,000 | ¥4,250-6,800 | ¥7,500-12,000 | N/A |
 | Diagnostic Presentation | Diagnostic | ¥0 (included) | N/A | N/A | N/A |
@@ -134,7 +134,7 @@ It must feel like **Calendly's booking flow + Eventbrite's registration + Notion
 |------|---------|----------|-----------|----------|
 | `early_bird` | Registration 14+ days before | 15% off | All paid events | Product has `never_discount=true` |
 | `founding_client` | First 3 registrations for new event type | 40-50% off | Workshops, masterclasses | Never-discount products |
-| `council_founding` | First 30 Council members | 20% off first year | Council tiers | PE after 5 filled |
+| `council_founding` | First 20 Council members | ¥2,800 flat | Council tiers | PE after 5 filled |
 | `multi_seat` | 3+ seats in one registration | 10% off total | Workshops, masterclasses | — |
 | `bundle_event` | Event + product bundle | Per-bundle discount | Council+Workshop bundle | — |
 
@@ -188,7 +188,7 @@ It must feel like **Calendly's booking flow + Eventbrite's registration + Notion
 4. PE tier shows "SOLD OUT" when 5/5 filled → waitlist only
 5. Registration form includes tier selection dropdown
 6. Pricing pulled from product catalog: ¥12K/¥30K/¥50K
-7. Founding member discount auto-applied if within first 30 members
+7. Founding member rate auto-applied if within first 20 members (¥2,800 flat)
 8. After registration: member receives welcome kit email + calendar invite + onboarding journey
 
 **Flow 3: Registration day check-in**
@@ -801,7 +801,7 @@ Council Registration Flow:
    - Corporate: 7/10 → available
    - PE: 5/5 → SOLD OUT → waitlist only
 3. System checks founding member eligibility:
-   - If first 30 members → apply 20% founding discount
+   - If first 20 members → apply founding rate ¥2,800
    - If PE tier AND founding members filled → NEVER DISCOUNT (hard block)
 4. Registration confirmed → create/update contact → mark as Council member
 5. Post-registration journey:
@@ -1011,7 +1011,7 @@ Council Registration Flow:
 | EVT-081 | Council tier selection in registration (Individual/Corporate/PE) | 3h | P0 | EVT-042 |
 | EVT-082 | Per-tier capacity display ("42/60 Individual | 7/10 Corp | 3/5 PE") | 2h | P0 | EVT-081 |
 | EVT-083 | PE tier sold-out state + waitlist | 2h | P0 | EVT-082 |
-| EVT-084 | Council founding member tracking (first 30) | 2h | P0 | EVT-031 |
+| EVT-084 | Council founding member tracking (first 20) | 2h | P0 | EVT-031 |
 | EVT-085 | Council member welcome journey (post-registration) | 3h | P1 | EVT-084, JOUR-001 |
 
 ### 10.13 Analytics & Intelligence (EVT-086 to EVT-092)

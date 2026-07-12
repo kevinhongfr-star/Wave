@@ -1173,6 +1173,8 @@ system_prompt: |
 | CAL-040 | Build AI auto-fill gaps (detect → suggest → create → schedule, review required) | P1 | 5h | CAL-014, CAL-020 |
 | CAL-041 | Build webhook system (content status change → external notification) | P2 | 3h | CAL-002 |
 | CAL-042 | Build accessibility layer (ARIA labels, full keyboard nav, screen reader) | P1 | 4h | All components |
+| CAL-043 | DEX AI referral tracking per content asset: track which content pieces drive DEX AI sign-ups | P0 | 4h | CAL-001 |
+| CAL-044 | Content-to-workshop attribution: link content views to workshop registrations | P1 | 3h | CAL-043 |
 
 **Total: 42 tickets | ~175 hours**
 
