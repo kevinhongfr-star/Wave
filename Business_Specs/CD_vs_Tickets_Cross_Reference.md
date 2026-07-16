@@ -281,3 +281,31 @@ CDs store content in Notion page bodies. WAVE has metadata but can't display the
 ---
 
 *Analysis by NEXUS. 14 CD files cross-referenced against 733 WAVE tickets. Ready for Kevin's review before writing updated specs.*
+
+---
+
+## UPDATE 2026-07-16: Specs Written — Phase 1/2/3
+
+Full detailed specs for all 38 gap tickets are now in:
+**`Business_Specs/Page_Specs/11_LMS_Tools_Program_Podcast_Expanded.md`**
+
+### Build Order:
+
+**Phase 1 — Launch Blockers (P0) — 56h — 12 tickets**
+- Batch 1A: LMS Core (LMS-001 to LMS-009) — B2C course delivery
+- Batch 1B: ROI Calculator (TOOL-001 to TOOL-002) — live sales call tool
+- Batch 1C: Notion Bridge (NOTION-016) — deep-link to CD content
+
+**Phase 2 — Feature Complete (P1) — 44h — 16 tickets**
+- Batch 2A: LMS Advanced (LMS-010 to LMS-018) — analytics, team, prerequisites
+- Batch 2B: Program Delivery (PROG-001 to PROG-005) — multi-session management
+- Batch 2C: Calculator Advanced (TOOL-003 to TOOL-004) — share + CRM
+- Batch 2D: Notion Preview (NOTION-017) — content preview card
+
+**Phase 3 — Ecosystem Expansion (P2) — 30h — 10 tickets**
+- Batch 3A: Podcast (POD-001 to POD-006) — 42-episode management
+- Batch 3B: Program Advanced (PROG-006 to PROG-008) — capstone, certificates, cross-sell
+
+**Plus: 7 existing ticket ranges need minor spec amendments (~7h)**
+
+*Updated by NEXUS. All specs detailed and ready for Trae.*
