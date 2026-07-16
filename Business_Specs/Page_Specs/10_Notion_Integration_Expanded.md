@@ -9,9 +9,9 @@
 
 ## Overview
 
-WAVE needs to import and sync data from two Notion databases:
-- **Launch Assets** (132 records) → WAVE's `assets` table + Module 1 Dashboard
-- **365 Build Tracker** (100 records) → New `build_tracker` table + Module 1 Dashboard
+WAVE needs to import and sync data from two Notion databases (scope validated via live Notion API audit 2026-07-16):
+- **Launch Assets** (107 WAVE-relevant records, 25 excluded — see exclusion rules below) → WAVE's `assets` table + Module 1 Dashboard
+- **365 Build Tracker** (~503 WAVE-relevant records, ~99 excluded — website/brand/legal) → New `build_tracker` table + Module 1 Dashboard
 
 These are operational data sources — not reference documents. The integration is bidirectional awareness (WAVE reads Notion, displays in dashboard, tracks sync health).
 
@@ -101,10 +101,17 @@ CREATE TABLE notion_sync_log (
 
 ---
 
-## NOTION-004 | Seed Launch Assets Data (132 Records)
+## NOTION-004 | Seed Launch Assets Data (107 Records)
 **Module:** Module 3 (Assets) | **Priority:** P0 | **Est:** 3h
 
-**What:** Write a migration script that imports all 132 Launch Assets from Notion into `assets` table.
+**What:** Write a migration script that imports 107 WAVE-relevant Launch Assets from Notion into `assets` table. 25 records are excluded per scope audit.
+
+**Exclusion rules — skip records where Category is:**
+- `Web Page` (9 records) — CD-6 boundary, external website content
+- `Search Material` (6 records) — VISTA scope (outbound sales)
+- `LinkedIn Post` or `LinkedIn` (4 records) — external social media
+- `Legal` or `Internal Ops` or `ICP` (5 records) — reference documents
+- `Brand` (1 record) — reference PDF
 
 **Data mapping:**
 | Notion Field | Target Column |
@@ -127,24 +134,38 @@ CREATE TABLE notion_sync_log (
 - Header: `Notion-Version: 2022-06-28`
 
 **Acceptance:**
-- All 132 assets imported
+- 107 WAVE-relevant assets imported (25 excluded per rules above)
 - Status values mapped correctly (Not Started→idea, etc.)
-- Dependencies parsed from "C1.1, C1.5" format to `["C1.1", "C1.5"]`
+- Dependencies parsed from "C1.1, C1.5" format to ["C1.1", "C1.5"]
 - No duplicates on re-run (upsert on `notion_asset_id`)
-- Script logs to `notion_sync_log`
+- Script logs to `notion_sync_log` with count of skipped records
 
 ---
 
-## NOTION-005 | Seed Build Tracker Data (100 Records)
-**Module:** Module 1 (Dashboard) | **Priority:** P0 | **Est:** 2h
+## NOTION-005 | Seed Build Tracker Data (~503 Records)
+**Module:** Module 1 (Dashboard) | **Priority:** P0 | **Est:** 3h
 
-**What:** Import 365 Build Tracker records into `build_tracker` table.
+**What:** Import ~503 WAVE-relevant Build Tracker records into `build_tracker` table. ~99 records excluded (website/brand/legal).
+
+**IMPORTANT — Data quality issues found in Notion DB:**
+- `Status` field: EMPTY for all 646 records — WAVE will use its own status system
+- `Priority` field: EMPTY for all 646 records — WAVE will use its own priority system
+- `Sub-Category` field: EMPTY for all 646 records — not imported
+- `Product` field: 65% empty — import when present, NULL when absent
+- 44 duplicate records found — deduplicate by deliverable_name before import
+
+**Exclusion rules — skip records where Category is:**
+- `Website` (83 records) — external website content, CD-6 boundary
+- `Brand & Identity` (8 records) — design assets, not WAVE platform features
+- `Legal` or `Internal Ops` (8 records) — reference documents
 
 **Data mapping:**
 | Notion Field | Target Column |
 |-------------|---------------|
 | Deliverable title | Parse "#NNN — Name" → `deliverable_number` + `deliverable_name` |
 | Phase | `build_phase` |
+| Category | `category` (new column — add if not exists) |
+| Product | `product` (new column — nullable, 65% empty) |
 
 **Parsing logic:**
 ```
@@ -154,9 +175,11 @@ Title format: "#424 — LYC Partners — LinkedIn Posts — Kevin Hong (Posts 51
 ```
 
 **Acceptance:**
-- All 100 records imported
+- ~503 WAVE-relevant records imported (~99 excluded per rules above)
 - Title parsed correctly (number extracted, name cleaned)
 - `build_phase` stored as full string (e.g., "Phase 4 — Events & Programs")
+- Status/Priority/SubCategory NOT imported (all empty in source)
+- Deduplication applied (44 duplicates resolved by deliverable_name)
 - Upsert on `notion_page_id` — safe to re-run
 
 ---
