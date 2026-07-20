@@ -4,8 +4,8 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import {
-  LayoutDashboard, Calendar, FolderOpen, Send,
-  Route, RefreshCw, CalendarPlus, BarChart3,
+  LayoutDashboard, Calendar, FolderOpen, Folder, Send,
+  Route, RefreshCw, CalendarPlus, BarChart3, Megaphone,
   Bot, ChevronDown, ChevronRight, Settings
 } from 'lucide-react'
 
@@ -20,7 +20,9 @@ const navGroups = [
     label: 'Content',
     items: [
       { href: '/dashboard/content', label: 'Content Calendar', icon: Calendar, badge: '12' },
+      { href: '/dashboard/campaigns', label: 'Campaigns', icon: Megaphone },
       { href: '/dashboard/templates', label: 'Template Library', icon: FolderOpen },
+      { href: '/dashboard/assets', label: 'Assets', icon: Folder },
     ],
   },
   {
